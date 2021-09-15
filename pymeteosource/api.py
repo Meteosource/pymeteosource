@@ -21,7 +21,7 @@ class MeteoSource:
 
     Methods
     -------
-    build_url
+    _build_url
         Build URL for the request
     get_point_forecast
         Get forecast data for given point
@@ -39,7 +39,7 @@ class MeteoSource:
         self.host = host
         self.tier = tier
 
-    def build_url(self, endpoint):
+    def _build_url(self, endpoint):
         """
         Build URL for the request
 
@@ -67,7 +67,7 @@ class MeteoSource:
         :return Forecast: Forecast object with the forecast data
         """
         # Build the URL for the request
-        url = self.build_url(endpoints.POINT)
+        url = self._build_url(endpoints.POINT)
         if isinstance(sections, (list, tuple)):
             sections = ','.join(sections)
         # Parameters of the request, the requested tz is always UTC!

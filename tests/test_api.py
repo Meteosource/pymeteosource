@@ -61,7 +61,7 @@ def test_build_url():
     url = 'https://www.meteosource.com/api/v1/TIER/point'
     for tier in [tiers.PREMIUM, tiers.STANDARD, tiers.STARTUP, tiers.FREE]:
         m = MeteoSource(API_KEY, tier)
-        assert m.build_url(endpoints.POINT) == url.replace('TIER', tier)
+        assert m._build_url(endpoints.POINT) == url.replace('TIER', tier)
 
 
 def test_get_point_forecast_exceptions():
