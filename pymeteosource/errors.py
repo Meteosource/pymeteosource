@@ -18,7 +18,23 @@ class InvalidArgumentError(ValueError):
         super().__init__(self.message)
 
 
-class InvalidIndexType(ValueError):
+class EmptyInstanceError(ValueError):
+    """
+    Exception that is raised when access using [] attempted to empty instance
+
+    Attributes
+    ----------
+    MSG : string
+        The exceptions message to print
+    """
+    MSG = 'The instance does not contain any data!'
+
+    def __init__(self):
+        self.message = self.MSG
+        super().__init__(self.message)
+
+
+class InvalidIndexTypeError(ValueError):
     """
     Exception that is raised when illegal index type is used
     for indexing MultipleTimesData.
@@ -38,7 +54,7 @@ class InvalidIndexType(ValueError):
         super().__init__(self.message)
 
 
-class InvalidDatetimeIndex(ValueError):
+class InvalidDatetimeIndexError(ValueError):
     """
     Exception that is raised when datetime used to index MultipleTimesData
     is not present in the data.
@@ -58,7 +74,7 @@ class InvalidDatetimeIndex(ValueError):
         super().__init__(self.message)
 
 
-class InvalidStrIndex(ValueError):
+class InvalidStrIndexError(ValueError):
     """
     Exception that is raised when string used to index MultipleTimesData
     is not present in the data.

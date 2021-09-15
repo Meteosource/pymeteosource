@@ -5,8 +5,8 @@ from datetime import datetime
 import pytz
 
 from .types.time_formats import F1, F2
-from .errors import (InvalidStrIndex, InvalidIndexType,
-                     InvalidDatetimeIndex)
+from .errors import (InvalidStrIndexError, InvalidIndexTypeError,
+                     InvalidDatetimeIndexError, EmptyInstanceError)
 
 
 class BaseData:
@@ -264,6 +264,8 @@ class MultipleTimesData(BaseData):
         integer (classic 0-based index), string (using YYYY-MM-DDTHH:MM:SS or
         YYYY-MM-DD format) or datetime (both localized or unlocalized).
         """
+        if len(self) == 0:
+            raise EmptyInstanceError()
         # For ints, we simply return the data with given index
         if isinstance(attr, int):
             return self.data[attr]
@@ -275,17 +277,17 @@ class MultipleTimesData(BaseData):
         """
         if isinstance(attr, str):
             if attr not in self.dates_str:
-                raise InvalidStrIndex(attr)
+                raise InvalidStrIndexError(attr)
             return self.data[self.dates_str.index(attr)]
         # For datetimes, we localize it if necessary and use 'dates_dt' list
         if isinstance(attr, datetime):
             if attr.tzinfo is None:
                 attr = pytz.timezone(self._timezone).localize(attr)
             if attr not in self.dates_dt:
-                raise InvalidDatetimeIndex(attr)
+                raise InvalidDatetimeIndexError(attr)
             return self.data[self.dates_dt.index(attr)]
 
-        raise InvalidIndexType(attr)
+        raise InvalidIndexTypeError(attr)
 
 
 class Forecast:

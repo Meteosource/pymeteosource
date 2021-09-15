@@ -13,8 +13,9 @@ from pymeteosource.api import MeteoSource
 from pymeteosource.types import tiers, endpoints, units, sections
 from pymeteosource.data import Forecast, SingleTimeData, MultipleTimesData
 from pymeteosource.types.time_formats import F1
-from pymeteosource.errors import (InvalidArgumentError, InvalidIndexType,
-                                  InvalidDatetimeIndex, InvalidStrIndex)
+from pymeteosource.errors import (InvalidArgumentError, InvalidIndexTypeError,
+                                  InvalidDatetimeIndexError,
+                                  InvalidStrIndexError)
 
 from .sample_data import SAMPLE_DATA
 from .variables_list import (CURRENT, PRECIPITATION_CURRENT, WIND, MINUTELY,
@@ -88,11 +89,11 @@ def test_forecast_indexing():
     assert f.hourly['2021-09-08T11:00:00'].feels_like == 23.2
 
     # Index by string with wrong format
-    with pytest.raises(InvalidStrIndex):
+    with pytest.raises(InvalidStrIndexError):
         f.hourly['2021-09-08 11:00:00']  # pylint: disable=W0104
 
     # Index by unsupported type
-    with pytest.raises(InvalidIndexType):
+    with pytest.raises(InvalidIndexTypeError):
         f.hourly[1.1]  # pylint: disable=W0104
 
     # Index by tz-naive datetime
@@ -105,7 +106,7 @@ def test_forecast_indexing():
 
     # Index by tz-aware datetime but with wrong timezone
     dt2 = pytz.timezone('Asia/Kabul').localize(dt)
-    with pytest.raises(InvalidDatetimeIndex) as e:
+    with pytest.raises(InvalidDatetimeIndexError) as e:
         f.hourly[dt2]  # pylint: disable=W0104
     err = 'Invalid datetime index "%s" to MultipleTimesData!' % dt2
     assert str(e.value) == err
