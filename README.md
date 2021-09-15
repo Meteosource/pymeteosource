@@ -22,6 +22,20 @@ pip3 install pymeteosource[pandas]
 To use this library, you need to obtain your MeteoSource API key. You can [sign up](https://www.meteosource.com/client/sign-up) or get the API key of existing account in [your dashboard](https://www.meteosource.com/client).
 
 
+### Tests
+The unit tests are written using `pytest`. As the `pandas` exporting feature is also tested, you should have `pandas` library installed. You can install both of them using:
+```bash
+pip3 install pytest
+pip3 install pandas
+```
+
+The tests only make 2 actual requests to live API, most of the tests use mocked API response. You need to provide your actual API key using environment variable. To run the tests, use:
+```bash
+# Change this to you actual API key
+export METEOSOURCE_API_KEY='abcdefghijklmnopqrstuvwxyz0123456789ABCD'
+pytest -s tests
+```
+
 
 # Example usage
 
@@ -72,9 +86,9 @@ forecast.timezone  # 'US/Pacific'
 # (represented by SingleTimeData). You can also print the instance, which gives:
 #
 # <Instance of SingleTimeData (current) with 17 member variables (cloud_cover,
-#  dew_point, feels_like, humidity, icon, icon_num, irradiance, last_update,
-#  ozone, precipitation, pressure, summary, temperature, uv_index, visibility,
-# wind, wind_chill)>
+#  dew_point, feels_like, humidity, icon, icon_num, irradiance, ozone,
+#  precipitation, pressure, summary, temperature, uv_index, visibility,
+#  wind, wind_chill)>
 print(forecast.current)
 
 
