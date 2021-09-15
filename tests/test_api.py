@@ -125,6 +125,10 @@ def test_forecast_indexing():
     dt = datetime.strptime('2021-09-09T00:00:00', F1)
     assert f.hourly[dt].probability.precipitation == 61
 
+    # Index by tz-aware datetime but in different tz
+    dt1 = pytz.timezone('UTC').localize(dt)
+    assert f.hourly[dt1].probability.precipitation == 61
+
     # Index by tz-aware datetime
     dt1 = pytz.timezone('Europe/London').localize(dt)
     assert f.hourly[dt1].probability.precipitation == 21
@@ -133,8 +137,7 @@ def test_forecast_indexing():
     dt2 = pytz.timezone('Asia/Kabul').localize(dt)
     with pytest.raises(InvalidDatetimeIndexError) as e:
         f.hourly[dt2]  # pylint: disable=W0104
-    err = 'Invalid datetime index "%s" to MultipleTimesData!' % dt2
-    assert str(e.value) == err
+    assert 'Invalid datetime index' in str(e.value)
 
     # Check timezone settings
     f = m.get_point_forecast(place_id='london', tz='Europe/London')

@@ -286,8 +286,12 @@ class MultipleTimesData(BaseData):
             return self.data[self.dates_str.index(attr)]
         # For datetimes, we localize it if necessary and use 'dates_dt' list
         if isinstance(attr, datetime):
+            # If the datetime is naive
             if attr.tzinfo is None:
                 attr = pytz.timezone(self._timezone).localize(attr)
+            else:
+                # If it is tz-aware, we convert it to the same timezone
+                attr = attr.astimezone(pytz.timezone(self._timezone))
             if attr not in self.dates_dt:
                 raise InvalidDatetimeIndexError(attr)
             return self.data[self.dates_dt.index(attr)]
