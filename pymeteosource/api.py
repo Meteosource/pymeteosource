@@ -68,6 +68,8 @@ class MeteoSource:
         """
         # Build the URL for the request
         url = self.build_url(endpoints.POINT)
+        if isinstance(sections, (list, tuple)):
+            sections = ','.join(sections)
         # Parameters of the request
         pars = {'language': lang, 'units': units, 'timezone': tz,
                 'sections': sections}

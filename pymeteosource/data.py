@@ -115,7 +115,7 @@ class BaseData:
             df = pd.DataFrame([x.to_dict() for x in self.data])
         # This is also possible, but results in 1-row DataFrame
         elif isinstance(self, SingleTimeData):
-            df = pd.DataFrame([self.to_dict()]) # pylint: disable=E1101
+            df = pd.DataFrame([self.to_dict()])  # pylint: disable=E1101
         # This should not happen
         else:
             c = self.__class__.__name__
@@ -134,7 +134,7 @@ class BaseData:
         Override __repr__ to have usefull text when attepting to print
         """
         c, members = self.__class__.__name__, self.get_members()
-        date = getattr(self, 'date', getattr(self, 'day', None))
+        date = getattr(self, 'date', getattr(self, 'day', 'current'))
         return ('<Instance of {} ({}) with {} member variables ({})>'.format(
             c, date, len(members), ', '.join(members)))
 
