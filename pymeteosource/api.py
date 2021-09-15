@@ -1,4 +1,4 @@
-"""Module that provide the MeteoSource interface object"""
+"""Module that provide the Meteosource interface object"""
 
 from .request_handler import RequestHandler
 from .types import langs, sections, units, endpoints
@@ -6,16 +6,16 @@ from .errors import InvalidArgumentError
 from .data import Forecast
 
 
-class MeteoSource:
+class Meteosource:
     """
-    The main object that provides the interface for MeteoSource API
+    The main object that provides the interface for Meteosource API
 
     Attributes
     ----------
     req_handler : RequestHandler
         RequestHandler object to be used for the requests
     host : string
-        The host URL of the MeteoSource API
+        The host URL of the Meteosource API
     tier : string
         The tier the user is using
 
@@ -32,7 +32,7 @@ class MeteoSource:
 
         :param str: API key
         :param str: Tier the user is using
-        :param str: Host URL of the MeteoSource API
+        :param str: Host URL of the Meteosource API
         """
         # Initialize the request handler with the API key
         self.req_handler = RequestHandler(api_key)

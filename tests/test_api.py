@@ -9,7 +9,7 @@ import pytz
 import pytest
 import pandas
 
-from pymeteosource.api import MeteoSource
+from pymeteosource.api import Meteosource
 from pymeteosource.types import tiers, endpoints, units, sections
 from pymeteosource.data import Forecast, SingleTimeData, MultipleTimesData
 from pymeteosource.types.time_formats import F1
@@ -34,7 +34,7 @@ if API_KEY is None:
 
 def test_to_dst_changes():
     """Test exporting to pandas"""
-    m = MeteoSource(API_KEY, tiers.PREMIUM)
+    m = Meteosource(API_KEY, tiers.PREMIUM)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=LONG_DAY)
     # Get the mocked forecast
@@ -60,13 +60,13 @@ def test_build_url():
     """Test URL building"""
     url = 'https://www.meteosource.com/api/v1/TIER/point'
     for tier in [tiers.PREMIUM, tiers.STANDARD, tiers.STARTUP, tiers.FREE]:
-        m = MeteoSource(API_KEY, tier)
+        m = Meteosource(API_KEY, tier)
         assert m._build_url(endpoints.POINT) == url.replace('TIER', tier)
 
 
 def test_get_point_forecast_exceptions():
     """Test detection of invalid point specification detection"""
-    m = MeteoSource(API_KEY, tiers.PREMIUM)
+    m = Meteosource(API_KEY, tiers.PREMIUM)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_DATA)
 
@@ -97,7 +97,7 @@ def test_get_point_forecast_exceptions():
 
 def test_forecast_indexing():
     """Test indexing MultipleTimesData with int, string and datetimes"""
-    m = MeteoSource(API_KEY, tiers.PREMIUM)
+    m = Meteosource(API_KEY, tiers.PREMIUM)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_DATA)
     # Get the mocked forecast
@@ -155,7 +155,7 @@ def test_forecast_indexing():
 
 def test_to_pandas():
     """Test exporting to pandas"""
-    m = MeteoSource(API_KEY, tiers.PREMIUM)
+    m = Meteosource(API_KEY, tiers.PREMIUM)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_DATA)
     # Get the mocked forecast
@@ -179,7 +179,7 @@ def test_to_pandas():
 
 def test_to_dict():
     """Test exporting to pandas"""
-    m = MeteoSource(API_KEY, tiers.PREMIUM)
+    m = Meteosource(API_KEY, tiers.PREMIUM)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_DATA)
     # Get the mocked forecast
@@ -191,8 +191,8 @@ def test_to_dict():
 
 def test_forecast_structure():
     """Test structure of the Forecast object on real data"""
-    # Initialize the MeteoSource object
-    m = MeteoSource(API_KEY, tiers.PREMIUM)
+    # Initialize the Meteosource object
+    m = Meteosource(API_KEY, tiers.PREMIUM)
     # Get real forecast data (not mocked)
     f = m.get_point_forecast(place_id='london', tz='Asia/Kabul',
                              units=units.METRIC, sections=sections.ALL)
@@ -254,7 +254,7 @@ def test_forecast_structure():
     assert set(f.daily[0].statistics.precipitation.get_members()) == STATS_PREC
 
     # Check correct exception raising when minutely data are not present
-    m = MeteoSource(API_KEY, tiers.FREE)
+    m = Meteosource(API_KEY, tiers.FREE)
     # Get real forecast data (not mocked)
     f = m.get_point_forecast(place_id='london')
     with pytest.raises(EmptyInstanceError) as e:

@@ -1,7 +1,7 @@
-pyMeteoSource
+pymeteosource
 ==========
 
-Python wrapper library for MeteoSource API that provides detailed hyperlocal weather forecasts for any location on earth.
+Python wrapper library for Meteosource API that provides detailed hyperlocal weather forecasts for any location on earth.
 
 
 ### Installation
@@ -19,7 +19,7 @@ pip3 install pymeteosource[pandas]
 
 ### Get started
 
-To use this library, you need to obtain your MeteoSource API key. You can [sign up](https://www.meteosource.com/client/sign-up) or get the API key of existing account in [your dashboard](https://www.meteosource.com/client).
+To use this library, you need to obtain your Meteosource API key. You can [sign up](https://www.meteosource.com/client/sign-up) or get the API key of existing account in [your dashboard](https://www.meteosource.com/client).
 
 
 ### Tests
@@ -43,7 +43,7 @@ pytest tests
 from datetime import datetime, timedelta
 import pytz
 
-from pymeteosource.api import MeteoSource
+from pymeteosource.api import Meteosource
 from pymeteosource.types import tiers, sections, langs, units
 
 
@@ -52,8 +52,8 @@ YOUR_API_KEY = 'abcdefghijklmnopqrstuvwxyz0123456789ABCD'
 # Change this to your actual tier
 YOUR_TIER = tiers.PREMIUM
 
-# Initialize the main MeteoSource object
-meteosource = MeteoSource(YOUR_API_KEY, YOUR_TIER)
+# Initialize the main Meteosource object
+meteosource = Meteosource(YOUR_API_KEY, YOUR_TIER)
 
 # Get the forecast for given point
 forecast = meteosource.get_point_forecast(
