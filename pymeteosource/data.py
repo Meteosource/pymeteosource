@@ -68,8 +68,10 @@ class BaseData:
                 if value is not None:
                     # Items that contain datetime and need to be localized
                     if key in ('date', 'last_update', 'rise', 'set'):
-                        # Convert to datetime and localize
-                        value = tz.localize(datetime.strptime(value, F1))
+                        # Convert to datetime
+                        dt = datetime.strptime(value, F1)
+                        # Localize from UTC
+                        value = pytz.utc.localize(dt).astimezone(tz)
                     # Items that only contain day (not hours, etc.)
                     if key == 'day':
                         # Only convert to datetime
@@ -319,13 +321,13 @@ class Forecast:
     daily : MultipleTimesData
         The data from 'daily' section
     """
-    def __init__(self, data):
+    def __init__(self, data, tz):
         lat, lon = data['lat'], data['lon']
         # Parse the lat, lon string values to floats
         self.lat = float(lat[:-1]) if lat[-1] == 'N' else -float(lat[:-1])
         self.lon = float(lon[:-1]) if lon[-1] == 'E' else -float(lon[:-1])
         self.elevation = data['elevation']
-        self.timezone = data['timezone']
+        self.timezone = tz
         self.units = data['units']
 
         self.current = SingleTimeData(data.get('current', None), self.timezone)

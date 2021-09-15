@@ -18,6 +18,7 @@ from pymeteosource.errors import (InvalidArgumentError, InvalidIndexTypeError,
                                   InvalidDatetimeIndexError)
 
 from .sample_data import SAMPLE_DATA
+from .dst_changes_data import LONG_DAY
 from .variables_list import (CURRENT, PRECIPITATION_CURRENT, WIND, MINUTELY,
                              HOURLY, CLOUD, PRECIPITATION, PROBABILITY, DAILY,
                              ALL_DAY, PART_DAY, ASTRO, SUN, MOON, STATS,
@@ -29,6 +30,30 @@ sys.path.insert(0, realpath(join(dirname(__file__), "..")))
 API_KEY = os.environ.get('METEOSOURCE_API_KEY')
 if API_KEY is None:
     raise ValueError("You need to provide API key as environment variable.")
+
+
+def test_to_dst_changes():
+    """Test exporting to pandas"""
+    m = MeteoSource(API_KEY, tiers.PREMIUM)
+    # We mock the API requests with sample data
+    m.req_handler.execute_request = MagicMock(return_value=LONG_DAY)
+    # Get the mocked forecast
+    f = m.get_point_forecast(place_id='london', tz='Europe/Prague')
+    # Check the ambiguous date is handled properly
+    dts = ['2021-10-31T01:00:00', '2021-10-31T02:00:00',
+           '2021-10-31T02:00:00', '2021-10-31T03:00:00']
+    assert f.hourly.dates_str == dts
+
+    # Check the astro datetimes are OK when DST changes
+    tz = pytz.timezone('Europe/Prague')
+    dt = tz.localize(datetime(2021, 10, 31, 1, 24, 35), is_dst=None)
+    assert f.daily[0].astro.sun.rise == dt
+    dt = tz.localize(datetime(2021, 10, 31, 2, 24, 35), is_dst=True)
+    assert f.daily[0].astro.sun.set == dt
+    dt = tz.localize(datetime(2021, 10, 31, 2, 24, 35), is_dst=False)
+    assert f.daily[0].astro.moon.rise == dt
+    dt = tz.localize(datetime(2021, 10, 31, 3, 24, 35), is_dst=None)
+    assert f.daily[0].astro.moon.set == dt
 
 
 def test_build_url():
@@ -76,7 +101,7 @@ def test_forecast_indexing():
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_DATA)
     # Get the mocked forecast
-    f = m.get_point_forecast(place_id='london')
+    f = m.get_point_forecast(place_id='london', tz='UTC')
 
     # Index by int
     assert f.hourly[1].wind.angle == 106
@@ -102,7 +127,7 @@ def test_forecast_indexing():
 
     # Index by tz-aware datetime
     dt1 = pytz.timezone('Europe/London').localize(dt)
-    assert f.hourly[dt1].probability.precipitation == 61
+    assert f.hourly[dt1].probability.precipitation == 21
 
     # Index by tz-aware datetime but with wrong timezone
     dt2 = pytz.timezone('Asia/Kabul').localize(dt)
@@ -110,6 +135,19 @@ def test_forecast_indexing():
         f.hourly[dt2]  # pylint: disable=W0104
     err = 'Invalid datetime index "%s" to MultipleTimesData!' % dt2
     assert str(e.value) == err
+
+    # Check timezone settings
+    f = m.get_point_forecast(place_id='london', tz='Europe/London')
+    dt = pytz.timezone('Europe/London').localize(datetime(2021, 9, 8, 10))
+    assert f.hourly[0].date == dt
+
+    f = m.get_point_forecast(place_id='london', tz='Europe/Prague')
+    dt = pytz.timezone('Europe/Prague').localize(datetime(2021, 9, 8, 11))
+    assert f.hourly[0].date == dt
+
+    f = m.get_point_forecast(place_id='london', tz='Asia/Kabul')
+    dt = pytz.timezone('Asia/Kabul').localize(datetime(2021, 9, 8, 13, 30))
+    assert f.hourly[0].date == dt
 
 
 def test_to_pandas():
@@ -217,5 +255,5 @@ def test_forecast_structure():
     # Get real forecast data (not mocked)
     f = m.get_point_forecast(place_id='london')
     with pytest.raises(EmptyInstanceError) as e:
-        f.minutely[0]
+        f.minutely[0]  # pylint: disable=W0104
     assert str(e.value) == 'The instance does not contain any data!'

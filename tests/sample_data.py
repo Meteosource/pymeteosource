@@ -4,7 +4,7 @@ SAMPLE_DATA = {
     "lat":"51.50853N",
     "lon":"0.12574W",
     "elevation":25,
-    "timezone":"Europe/London",
+    "timezone":"UTC",
     "units":"metric",
     "current":{
         "last_update":"2021-09-08T08:00:00",

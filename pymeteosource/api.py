@@ -61,7 +61,7 @@ class MeteoSource:
         :param float: Latitude of the point
         :param float: Longitude of the point
         :param str: Sections to return
-        :param str: Timezone in which the times will be expressed
+        :param str: Timezone for final output. Requests are always made in UTC!
         :param str: Language
         :param str: Units to use
         :return Forecast: Forecast object with the forecast data
@@ -71,7 +71,7 @@ class MeteoSource:
         if isinstance(sections, (list, tuple)):
             sections = ','.join(sections)
         # Parameters of the request
-        pars = {'language': lang, 'units': units, 'timezone': tz,
+        pars = {'language': lang, 'units': units, 'timezone': 'UTC',
                 'sections': sections}
 
         # If place_id is not specified, we use lat+lon
@@ -92,4 +92,4 @@ class MeteoSource:
         data = self.req_handler.execute_request(url, **pars)
 
         # Load the result into Forecast object and return it
-        return Forecast(data)
+        return Forecast(data, tz)
