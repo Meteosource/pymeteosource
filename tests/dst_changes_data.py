@@ -7,7 +7,6 @@ LONG_DAY = {
     "timezone":"UTC",
     "units":"metric",
     "current":{
-        "last_update":"2021-10-31T00:30:00",
         "icon":"sunny",
         "icon_num":2,
         "summary":"Sunny",

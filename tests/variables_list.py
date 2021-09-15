@@ -11,9 +11,9 @@ PROBABILITY = {'precipitation', 'storm', 'freeze'}
 PRECIPITATION = {'total', 'type', 'convective', 'rainspot'}
 
 CURRENT = {'cloud_cover', 'dew_point', 'feels_like', 'humidity', 'icon',
-           'icon_num', 'irradiance', 'last_update', 'ozone', 'precipitation',
-           'pressure', 'summary', 'temperature', 'uv_index', 'visibility',
-           'wind', 'wind_chill'}
+           'icon_num', 'irradiance', 'ozone', 'precipitation', 'pressure',
+           'summary', 'temperature', 'uv_index', 'visibility', 'wind',
+           'wind_chill'}
 
 PRECIPITATION_CURRENT = {'total', 'type'}
 

@@ -7,7 +7,6 @@ SAMPLE_DATA = {
     "timezone":"UTC",
     "units":"metric",
     "current":{
-        "last_update":"2021-09-08T08:00:00",
         "icon":"sunny",
         "icon_num":2,
         "summary":"Sunny",

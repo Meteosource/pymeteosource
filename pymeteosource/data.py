@@ -67,7 +67,7 @@ class BaseData:
                 # None values can occur in the data
                 if value is not None:
                     # Items that contain datetime and need to be localized
-                    if key in ('date', 'last_update', 'rise', 'set'):
+                    if key in ('date', 'rise', 'set'):
                         # Convert to datetime
                         dt = datetime.strptime(value, F1)
                         # Localize from UTC
