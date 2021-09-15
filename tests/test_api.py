@@ -14,8 +14,8 @@ from pymeteosource.types import tiers, endpoints, units, sections
 from pymeteosource.data import Forecast, SingleTimeData, MultipleTimesData
 from pymeteosource.types.time_formats import F1
 from pymeteosource.errors import (InvalidArgumentError, InvalidIndexTypeError,
-                                  InvalidDatetimeIndexError,
-                                  InvalidStrIndexError)
+                                  InvalidStrIndexError, EmptyInstanceError,
+                                  InvalidDatetimeIndexError)
 
 from .sample_data import SAMPLE_DATA
 from .variables_list import (CURRENT, PRECIPITATION_CURRENT, WIND, MINUTELY,
@@ -211,3 +211,11 @@ def test_forecast_structure():
     assert set(f.daily[0].statistics.temperature.get_members()) == STATS_TEMP
     assert set(f.daily[0].statistics.wind.get_members()) == STATS_WIND
     assert set(f.daily[0].statistics.precipitation.get_members()) == STATS_PREC
+
+    # Check correct exception raising when minutely data are not present
+    m = MeteoSource(API_KEY, tiers.FREE)
+    # Get real forecast data (not mocked)
+    f = m.get_point_forecast(place_id='london')
+    with pytest.raises(EmptyInstanceError) as e:
+        f.minutely[0]
+    assert str(e.value) == 'The instance does not contain any data!'

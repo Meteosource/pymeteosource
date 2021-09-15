@@ -244,7 +244,7 @@ class MultipleTimesData(BaseData):
         c = self.__class__.__name__
         # For empty instances, we cannot print any info__
         if len(self) == 0:
-            return '<Empty instance of {} '.format(c)
+            return '<Empty instance of {}>'.format(c)
         # For non-empty instances, we print the timesteps range
         return '<Instance of {} ({}) with {} timesteps from {} to {}>'.format(
             c, self.data_type, len(self), self.dates_str[0],
@@ -254,7 +254,10 @@ class MultipleTimesData(BaseData):
         """
         Override __len__ to support len() calls to the instance
         """
-        return len(self.data)
+        try:
+            return len(self.data)
+        except AttributeError:
+            return 0
 
     def __getitem__(self, attr):
         """
