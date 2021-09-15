@@ -13,7 +13,7 @@ class MeteoSource:
     Attributes
     ----------
     req_handler : RequestHandler
-        fdf
+        RequestHandler object to be used for the requests
     host : string
         The host URL of the MeteoSource API
     tier : string
