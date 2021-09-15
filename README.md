@@ -148,7 +148,7 @@ df = forecast.hourly.to_pandas()
 # names are created by concatenating them with '_'. So for example, instead
 # of wind.angle, you get column with name 'wind_angle'.
 #
-# The day (in the daily data) of date (in the other sections) is used as
+# The day (in the daily data) or date (in the other sections) is used as
 # pandas DateTimeIndex.
 print(df)
 ```
