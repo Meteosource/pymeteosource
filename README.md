@@ -33,7 +33,7 @@ The tests only make 2 actual requests to live API, most of the tests use mocked 
 ```bash
 # Change this to your actual API key
 export METEOSOURCE_API_KEY='abcdefghijklmnopqrstuvwxyz0123456789ABCD'
-pytest -s tests
+pytest tests
 ```
 
 
