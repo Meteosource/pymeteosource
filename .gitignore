@@ -1,0 +1,5 @@
+__venv__
+build
+dist
+pymeteosource.egg-info
+__pycache__
