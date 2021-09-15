@@ -31,7 +31,7 @@ pip3 install pandas
 
 The tests only make 2 actual requests to live API, most of the tests use mocked API response. You need to provide your actual API key using environment variable. To run the tests, use:
 ```bash
-# Change this to you actual API key
+# Change this to your actual API key
 export METEOSOURCE_API_KEY='abcdefghijklmnopqrstuvwxyz0123456789ABCD'
 pytest -s tests
 ```
@@ -47,9 +47,9 @@ from pymeteosource.api import MeteoSource
 from pymeteosource.types import tiers, sections, langs, units
 
 
-# Change this to you actual API key
+# Change this to your actual API key
 YOUR_API_KEY = 'abcdefghijklmnopqrstuvwxyz0123456789ABCD'
-# Change this to you actual tier
+# Change this to your actual tier
 YOUR_TIER = tiers.PREMIUM
 
 # Initialize the main MeteoSource object
