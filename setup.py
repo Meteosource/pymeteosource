@@ -7,17 +7,17 @@ with open(os.path.join(
     README = f.read()
 
 setup(
-    version="0.0.1",
+    version="0.1",
     name="pymeteosource",
     packages=find_packages(),
     install_requires=["wheel", "requests", "pytz"],
     extras_require={"pandas": "pandas"},
     description="Meteosource API wrapper library",
     long_description=README,
-    author="Jan Dejdar",
-    author_email="dejdar@meteocentrum.cz",
-    url="https://www.meteosource.com/",
-    license="???",
+    author="Meteosource",
+    author_email="support@meteosource.com",
+    url="https://github.com/Meteosource/pymeteosource/archive/v_01.tar.gz",
+    license="MIT",
     classifiers=[
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
