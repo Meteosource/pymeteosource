@@ -157,8 +157,3 @@ print(df)
 ### Contact us.
 
 You can contact us [here](https://www.meteosource.com/contact).
-
-
-### License.
-
-???
