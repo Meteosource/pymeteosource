@@ -2,6 +2,7 @@
 
 import requests
 
+from .errors import InvalidRequestError
 
 class RequestHandler:
     """
@@ -35,5 +36,9 @@ class RequestHandler:
         :param str: URL of the requests (without the parameters)
         :param kwargs: Arguments of the request (lat, lon, ...)
         """
-        response = self.session.get(url, params=params).json()
-        return response
+        response = self.session.get(url, params=params)
+        if response.status_code != 200:
+            raise InvalidRequestError(response)
+
+        data = response.json()
+        return data

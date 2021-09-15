@@ -1,5 +1,14 @@
 """Various custom exceptions"""
 
+class InvalidRequestError(ValueError):
+    """
+    Exception that is raised when API does not return 200 to a request
+    """
+    def __init__(self, response):
+        code, msg = response.status_code, response.text
+        self.message = 'API returned code %s with error: \n  %s' % (code, msg)
+        super().__init__(self.message)
+
 
 class InvalidArgumentError(ValueError):
     """
