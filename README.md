@@ -60,10 +60,10 @@ forecast = meteosource.get_point_forecast(
     lat=37.7775,  # Latitude of the point
     lon=-122.416389,  # Longitude of the point
     place_id=None,  # You can specify place_id instead of lat+lon
-    sections=[sections.CURRENT, sections.HOURLY],  # Defaults to 'all'
-    tz='US/Pacific',  # Defaults to 'UTC', regardles of the point location
+    sections=[sections.CURRENT, sections.HOURLY],  # Defaults to 'current,hourly'
+    tz='US/Pacific',  # Defaults to 'UTC', regardless of the point location
     lang=langs.ENGLISH,  # Defaults to 'en'
-    units=units.US  # Defaults to 'metric'
+    units=units.US  # Defaults to 'auto'
 )
 
 

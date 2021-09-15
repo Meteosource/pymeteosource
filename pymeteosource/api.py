@@ -52,8 +52,8 @@ class MeteoSource:
         return url
 
     def get_point_forecast(self, place_id=None, lat=None, lon=None,
-                           sections=sections.ALL, tz='UTC',
-                           lang=langs.ENGLISH, units=units.METRIC):
+                           sections=(sections.CURRENT, sections.HOURLY),
+                           tz='UTC', lang=langs.ENGLISH, units=units.AUTO):
         """
         Get forecast data for given point
 
@@ -70,7 +70,7 @@ class MeteoSource:
         url = self.build_url(endpoints.POINT)
         if isinstance(sections, (list, tuple)):
             sections = ','.join(sections)
-        # Parameters of the request
+        # Parameters of the request, the requested tz is always UTC!
         pars = {'language': lang, 'units': units, 'timezone': 'UTC',
                 'sections': sections}
 
