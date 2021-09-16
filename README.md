@@ -89,7 +89,7 @@ print(forecast)  # <Forecast for lat: 37.7775, lon: -122.416389>
 
 ### Attribute access
 
-The library loads the JSON response into its internal structures. You can acces the attributes using the dot operator (`.`), or the index operator (`[]`):
+The library loads the JSON response into its internal structures. You can access the attributes using the dot operator (`.`), or the index operator (`[]`):
 
 ```python
 # You can access all of the attributes with dot operator:
@@ -202,6 +202,6 @@ print(df)
 ```
 
 
-### Contact us.
+### Contact us
 
 You can contact us [here](https://www.meteosource.com/contact).
