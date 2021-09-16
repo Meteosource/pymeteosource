@@ -59,7 +59,7 @@ meteosource = Meteosource(YOUR_API_KEY, YOUR_TIER)
 
 ## Get the weather forecast
 
-To get the weather data for given place, use `get_point_forecast()` method of the `Meteosource` object. You have to specify either the coordinates of the place (`lat` + `lon`) or the `place_id`.
+To get the weather data for given place, use `get_point_forecast()` method of the `Meteosource` object. You have to specify either the coordinates of the place (`lat` + `lon`) or the `place_id`. Detailed description of the parameters can be found in the [API documentation](https://www.meteosource.com/documentation).
 
 Note that the default timezone is always `UTC`, as opposed to the API itself (which defaults to the point's local timezone). This is because the library always queries the API for the `UTC` timezone to avoid ambiguous datetimes problems. If you specify a different timezone, the library still requests the API for `UTC`, and then converts the datetimes to desired timezone.
 
