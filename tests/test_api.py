@@ -58,10 +58,10 @@ def test_to_dst_changes():
 
 def test_build_url():
     """Test URL building"""
-    url = 'https://www.meteosource.com/api/v1/TIER/point'
+    url = 'https://www.meteosource.com/api/v1/%s/point'
     for tier in [tiers.PREMIUM, tiers.STANDARD, tiers.STARTUP, tiers.FREE]:
         m = Meteosource(API_KEY, tier)
-        assert m._build_url(endpoints.POINT) == url.replace('TIER', tier)
+        assert m._build_url(endpoints.POINT) == url % tier
 
 
 def test_get_point_forecast_exceptions():
