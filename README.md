@@ -41,7 +41,7 @@ pytest tests
 
 ## Initialization
 
-To initialize the `Meteosource` object, you need your API key and the name your subscription plan (tier). The basic example of initialization is shown below:
+To initialize the `Meteosource` object, you need your API key and the name of your subscription plan (tier). Basic example of initialization is shown below:
 
 ```python
 from datetime import datetime, timedelta
@@ -66,7 +66,7 @@ To get the weather data for given place, use `get_point_forecast()` method of th
 
 Note that the default timezone is always `UTC`, as opposed to the API itself (which defaults to the point's local timezone). This is because the library always queries the API for the `UTC` timezone to avoid ambiguous datetimes problems. If you specify a different timezone, the library still requests the API for `UTC`, and then converts the datetimes to desired timezone.
 
-Note, that all time strings from the API response are converted to timezone-aware `datetime` objects.
+Note that all time strings from the API response are converted to timezone-aware `datetime` objects.
 
 ```python
 from pymeteosource.types import sections, langs, units
@@ -101,7 +101,7 @@ time_machine = meteosource.get_time_machine(
 ```
 Note, that the historical weather data are always retrieved for full UTC days. If you specify a different timezone, the datetimes get converted, but they will cover the full UTC, not the local day. If you specify a `datetime` to any of the date parameters, the hours, minutes, seconds and microseconds get ignored. So if you request `date='2021-12-25T23:59:59'`, you get data for full UTC day `2021-12-25`.
 
-If you pass `list`/`tuple`/`set` of dates to `date` parameter, they days be inserted into the inner structures in the order they are being iterated over. This affects time indexing by integer (see below). An API request is made for each day, even when you specify a date range.
+If you pass `list`/`tuple`/`set` of dates to `date` parameter, they days will be inserted into the inner structures in the order they are being iterated over. This affects time indexing by integer (see below). An API request is made for each day, even when you specify a date range.
 
 ## Working with the weather data
 All of the pymeteosource's data objects have overloaded `__repr__()` methods, so you can `print` the objects them to get useful information about them:
