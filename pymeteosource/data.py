@@ -6,7 +6,8 @@ import pytz
 
 from .types.time_formats import F1, F2
 from .errors import (InvalidStrIndexError, InvalidIndexTypeError,
-                     InvalidDatetimeIndexError, EmptyInstanceError)
+                     InvalidDatetimeIndexError, EmptyInstanceError,
+                     InvalidClassType)
 
 
 class BaseData:
@@ -198,7 +199,7 @@ class MultipleTimesData(BaseData):
     Class that represents data in single point in time
 
     This class is used to represent 'current' section, and the individual
-    timesteps of 'minutely', 'hourly' and 'daily'.
+    timesteps of 'minutely', 'hourly', 'daily' or 'time_machine'.
 
     Attributes
     ----------
@@ -238,6 +239,21 @@ class MultipleTimesData(BaseData):
         if 'summary' in data:
             self.summary = data['summary']
 
+    def append(self, other):
+        """
+        Append another MultipleTimesData instance
+
+        :param MultipleTimesData: The instance to append to this one
+        """
+        # Check the type
+        if type(other) is not MultipleTimesData: # pylint: disable=C0123
+            raise InvalidClassType(type(other))
+
+        # Append all data structures
+        self.data += other.data
+        self.dates_str += other.dates_str
+        self.dates_dt += other.dates_dt
+
     def __repr__(self):
         """
         Override __repr__ to have usefull text when attepting to print
@@ -249,8 +265,8 @@ class MultipleTimesData(BaseData):
             return '<Empty instance of {}>'.format(c)
         # For non-empty instances, we print the timesteps range
         return '<Instance of {} ({}) with {} timesteps from {} to {}>'.format(
-            c, self.data_type, len(self), self.dates_str[0],
-            self.dates_str[-1])
+            c, self.data_type, len(self), min(self.dates_str),
+            max(self.dates_str))
 
     def __len__(self):
         """
@@ -353,3 +369,74 @@ class Forecast:
         Override __getitem__ to allow variable access using [] operator
         """
         return getattr(self, attr)
+
+
+class TimeMachine:
+    """
+    Class that represents time machine archive data
+
+
+    Attributes
+    ----------
+    lat : float
+        Actual latitude of the point
+    lon : float
+        Actual longitude of the point
+    elevation : int
+        Elevation of the location
+    timezone : str
+        Timezone str identifier in pytz notation
+    units : str
+        Units set of the data
+    data : MultipleTimesData
+        The acutal archive data
+
+    Methods
+    -------
+    to_pandas
+        Export the data to pandas DataFrame
+    """
+    def __init__(self, data, tz):
+        lat, lon = data['lat'], data['lon']
+        # Parse the lat, lon string values to floats
+        self.lat = float(lat[:-1]) if lat[-1] == 'N' else -float(lat[:-1])
+        self.lon = float(lon[:-1]) if lon[-1] == 'E' else -float(lon[:-1])
+        self.elevation = data['elevation']
+        self.timezone = tz
+        self.units = data['units']
+        self.data = MultipleTimesData(data, 'time_machine', self.timezone)
+
+    def append(self, other):
+        """
+        Append another TimeMachine instance's data to this instance
+
+        :param TimeMachine: TimeMachine instance to be appended
+        """
+        # Call MultipleTimesData's 'append' method
+        self.data.append(other.data)
+
+    def __repr__(self):
+        """
+        Override __repr__ to have usefull text when attepting to print
+        """
+        return '<TimeMachine for lat: {}, lon: {}>'.format(self.lat, self.lon)
+
+    def __getitem__(self, attr):
+        """
+        Override __getitem__ to allow variable access using [] operator
+        """
+        return getattr(self, attr)
+
+    def to_pandas(self):
+        """
+        Export the data to pandas DataFrame
+
+        NOTE: This needs 'pandas' module, which is not needed for any other
+        parts of pymeteosource. Because of this, it is not installed by default
+        setup.py to keep the dependencies as minimal as possible. To use this
+        feature, use 'pip install pymeteosource[pandas]' to install this
+        package, or install pandas manually using 'pip install pandas'.
+
+        :return pandas.DataFrame: The DataFrame with 'date' as index
+        """
+        return self.data.to_pandas()

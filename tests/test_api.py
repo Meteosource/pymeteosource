@@ -2,7 +2,7 @@
 
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, date
 from unittest.mock import MagicMock
 from os.path import realpath, join, dirname
 import pytz
@@ -15,9 +15,10 @@ from pymeteosource.data import Forecast, SingleTimeData, MultipleTimesData
 from pymeteosource.types.time_formats import F1
 from pymeteosource.errors import (InvalidArgumentError, InvalidIndexTypeError,
                                   InvalidStrIndexError, EmptyInstanceError,
-                                  InvalidDatetimeIndexError)
+                                  InvalidDatetimeIndexError, InvalidDateFormat,
+                                  InvalidDateSpecification, InvalidDateRange)
 
-from .sample_data import SAMPLE_DATA
+from .sample_data import SAMPLE_POINT, SAMPLE_TIME_MACHINE
 from .dst_changes_data import LONG_DAY
 from .variables_list import (CURRENT, PRECIPITATION_CURRENT, WIND, MINUTELY,
                              HOURLY, CLOUD, PRECIPITATION, PROBABILITY, DAILY,
@@ -58,17 +59,18 @@ def test_to_dst_changes():
 
 def test_build_url():
     """Test URL building"""
-    url = 'https://www.meteosource.com/api/v1/%s/point'
+    url = 'https://www.meteosource.com/api/v1/%s/%s'
     for tier in [tiers.PREMIUM, tiers.STANDARD, tiers.STARTUP, tiers.FREE]:
-        m = Meteosource(API_KEY, tier)
-        assert m._build_url(endpoints.POINT) == url % tier
+        for endpoint in [endpoints.POINT, endpoints.TIME_MACHINE]:
+            m = Meteosource(API_KEY, tier)
+            assert m._build_url(endpoint) == url % (tier, endpoint)
 
 
 def test_get_point_forecast_exceptions():
     """Test detection of invalid point specification detection"""
     m = Meteosource(API_KEY, tiers.PREMIUM)
     # We mock the API requests with sample data
-    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_DATA)
+    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
 
     # Test invalid place definitions
     with pytest.raises(InvalidArgumentError) as e:
@@ -95,11 +97,68 @@ def test_get_point_forecast_exceptions():
     m.get_point_forecast(lat=50, lon=14)
 
 
+def test_get_time_machine_exceptions():
+    """Test date specification for get_time_machine"""
+    m = Meteosource(API_KEY, tiers.PREMIUM)
+    # We mock the API requests with sample data
+    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_TIME_MACHINE)
+
+    # Test invalid dates
+    with pytest.raises(InvalidDateFormat) as e:
+        m.get_time_machine(date='2021-01-0', place_id='london')
+    assert str(e.value) == 'Invalid date "2021-01-0", should be "%Y-%m-%d"'
+    with pytest.raises(InvalidDateFormat) as e:
+        m.get_time_machine(date='fgh', place_id='london')
+    assert str(e.value) == 'Invalid date "fgh", should be "%Y-%m-%d"'
+    with pytest.raises(InvalidDateFormat) as e:
+        m.get_time_machine(date=5, place_id='london')
+    assert 'str or date instance' in str(e.value)
+
+    # Test invalid date specifications
+    with pytest.raises(InvalidDateSpecification) as e:
+        m.get_time_machine(place_id='london')
+    assert str(e.value) == 'Specify either "date" or "date_from" and "date_to"'
+    with pytest.raises(InvalidDateSpecification) as e:
+        m.get_time_machine(date='2021-01-01', date_to='2021-01-02',
+                           place_id='london')
+    assert str(e.value) == 'Specify either "date" or "date_from" and "date_to"'
+    with pytest.raises(InvalidDateSpecification) as e:
+        m.get_time_machine(date='2021-01-01', date_from='2021-01-02',
+                           place_id='london')
+    assert str(e.value) == 'Specify either "date" or "date_from" and "date_to"'
+    with pytest.raises(InvalidDateSpecification) as e:
+        m.get_time_machine(date_to='2021-01-02', place_id='london')
+    assert str(e.value) == 'Specify either "date" or "date_from" and "date_to"'
+    with pytest.raises(InvalidDateSpecification) as e:
+        m.get_time_machine(date_from='2021-01-02', place_id='london')
+    assert str(e.value) == 'Specify either "date" or "date_from" and "date_to"'
+    with pytest.raises(InvalidDateSpecification) as e:
+        m.get_time_machine(date='2021-01-01', date_from='2021-01-01',
+                           date_to='2021-01-02', place_id='london')
+    assert str(e.value) == 'Specify either "date" or "date_from" and "date_to"'
+
+    # Test invalid date range
+    with pytest.raises(InvalidDateRange) as e:
+        m.get_time_machine(date_from='2021-01-03',
+                           date_to=datetime(2021, 1, 3, 23, 59),
+                           place_id='london')
+    assert 'is not smaller than "date_to"' in str(e.value)
+
+    # Test valid date definitions
+    m.get_time_machine(date='2021-01-01', place_id='london')
+    m.get_time_machine(date=['2021-01-01', datetime(2021, 1, 2)],
+                       place_id='london')
+    m.get_time_machine(date_from='2021-01-01', date_to=datetime(2021, 1, 3),
+                       place_id='london')
+    m.get_time_machine(date_from='2021-01-01', date_to=date(2021, 1, 3),
+                       place_id='london')
+
+
 def test_forecast_indexing():
     """Test indexing MultipleTimesData with int, string and datetimes"""
     m = Meteosource(API_KEY, tiers.PREMIUM)
     # We mock the API requests with sample data
-    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_DATA)
+    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
     # Get the mocked forecast
     f = m.get_point_forecast(place_id='london', tz='UTC')
 
@@ -157,7 +216,7 @@ def test_to_pandas():
     """Test exporting to pandas"""
     m = Meteosource(API_KEY, tiers.PREMIUM)
     # We mock the API requests with sample data
-    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_DATA)
+    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
     # Get the mocked forecast
     f = m.get_point_forecast(place_id='london')
 
@@ -181,7 +240,7 @@ def test_to_dict():
     """Test exporting to pandas"""
     m = Meteosource(API_KEY, tiers.PREMIUM)
     # We mock the API requests with sample data
-    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_DATA)
+    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
     # Get the mocked forecast
     f = m.get_point_forecast(place_id='london')
 
@@ -260,3 +319,28 @@ def test_forecast_structure():
     with pytest.raises(EmptyInstanceError) as e:
         f.minutely[0]  # pylint: disable=W0104
     assert str(e.value) == 'The instance does not contain any data!'
+
+
+def test_time_machine_structure():
+    """Test structure of the Forecast object on real data"""
+    # Shortcut for UTC timezone object
+    utc = pytz.timezone('UTC')
+    # Shortcut for Kabul timezone object
+    kbl = pytz.timezone('US/Pacific')
+
+    # Initialize the Meteosource object
+    m = Meteosource(API_KEY, tiers.PREMIUM)
+    # Get real forecast data (not mocked)
+    tm = m.get_time_machine(date=[date(2021, 1, 1), '2019-05-05',
+                            datetime(2020, 12, 15, 1, 10, 25)],
+                            place_id='london', tz='UTC')
+    assert len(tm.data) == 72
+    assert tm.data[0].date == datetime(2021, 1, 1, 0, tzinfo=utc)
+    assert tm.data[-1].date == datetime(2020, 12, 15, 23, tzinfo=utc)
+    assert tm.data[25].date == datetime(2019, 5, 5, 1, tzinfo=utc)
+
+    tm = m.get_time_machine(date_from='2019-05-05', date_to=date(2019, 5, 9),
+                            lat=35.295, lon=69.5, tz='Asia/Kabul')
+    assert len(tm.data) == 120
+    dt = pytz.utc.localize(datetime(2019, 5, 5)).astimezone(kbl)
+    assert tm.data[0].date == dt

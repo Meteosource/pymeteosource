@@ -42,7 +42,4 @@ class RequestHandler:
 
         data = response.json()
 
-        # We always get the source data in UTC and then convert to local tz
-        assert data['timezone'] == 'UTC'
-
         return data

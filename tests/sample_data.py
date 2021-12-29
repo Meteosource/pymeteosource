@@ -1,6 +1,6 @@
 """Sample API output dict for testing"""
 
-SAMPLE_DATA = {
+SAMPLE_POINT = {
     "lat":"51.50853N",
     "lon":"0.12574W",
     "elevation":25,
@@ -11317,4 +11317,733 @@ SAMPLE_DATA = {
             }
         ]
     }
+}
+
+SAMPLE_TIME_MACHINE = {
+  "lat": "50.08804N",
+  "lon": "14.42076E",
+  "elevation": 202,
+  "units": "metric",
+  "data": [
+    {
+      "date": "2020-10-01T00:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 7.9,
+      "soil_temperature": 9.5,
+      "dew_point": 7.35,
+      "surface_temperature": 8.22,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 291,
+        "dir": "WNW"
+      },
+      "cloud_cover": {
+        "total": 34,
+        "low": 15,
+        "middle": 0,
+        "high": 21
+      },
+      "pressure": 1012,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 268
+    },
+    {
+      "date": "2020-10-01T01:00:00",
+      "weather": "mostly_cloudy",
+      "icon": 5,
+      "temperature": 7.3,
+      "soil_temperature": 8.9,
+      "dew_point": 6.81,
+      "surface_temperature": 7.98,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 292,
+        "dir": "WNW"
+      },
+      "cloud_cover": {
+        "total": 73,
+        "low": 32,
+        "middle": 1,
+        "high": 60
+      },
+      "pressure": 1011,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 268
+    },
+    {
+      "date": "2020-10-01T02:00:00",
+      "weather": "mostly_cloudy",
+      "icon": 5,
+      "temperature": 7.5,
+      "soil_temperature": 8.5,
+      "dew_point": 6.99,
+      "surface_temperature": 7.83,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 288,
+        "dir": "WNW"
+      },
+      "cloud_cover": {
+        "total": 80,
+        "low": 25,
+        "middle": 0,
+        "high": 75
+      },
+      "pressure": 1010,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 269
+    },
+    {
+      "date": "2020-10-01T03:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 6.8,
+      "soil_temperature": 8.3,
+      "dew_point": 6.35,
+      "surface_temperature": 7.21,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 282,
+        "dir": "WNW"
+      },
+      "cloud_cover": {
+        "total": 49,
+        "low": 6,
+        "middle": 0,
+        "high": 45
+      },
+      "pressure": 1010,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 270
+    },
+    {
+      "date": "2020-10-01T04:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 6.9,
+      "soil_temperature": 8.3,
+      "dew_point": 6.28,
+      "surface_temperature": 7.01,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 267,
+        "dir": "W"
+      },
+      "cloud_cover": {
+        "total": 26,
+        "low": 2,
+        "middle": 0,
+        "high": 23
+      },
+      "pressure": 1009,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 271
+    },
+    {
+      "date": "2020-10-01T05:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 6.5,
+      "soil_temperature": 8.1,
+      "dew_point": 5.9,
+      "surface_temperature": 7.2,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 261,
+        "dir": "W"
+      },
+      "cloud_cover": {
+        "total": 34,
+        "low": 7,
+        "middle": 7,
+        "high": 25
+      },
+      "pressure": 1009,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 27,
+      "ozone": 271
+    },
+    {
+      "date": "2020-10-01T06:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 8,
+      "soil_temperature": 8.3,
+      "dew_point": 7.04,
+      "surface_temperature": 9.08,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 271,
+        "dir": "W"
+      },
+      "cloud_cover": {
+        "total": 45,
+        "low": 17,
+        "middle": 3,
+        "high": 35
+      },
+      "pressure": 1009,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 122,
+      "ozone": 272
+    },
+    {
+      "date": "2020-10-01T07:00:00",
+      "weather": "mostly_cloudy",
+      "icon": 5,
+      "temperature": 10.1,
+      "soil_temperature": 9.1,
+      "dew_point": 8.14,
+      "surface_temperature": 12.73,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 278,
+        "dir": "W"
+      },
+      "cloud_cover": {
+        "total": 53,
+        "low": 23,
+        "middle": 13,
+        "high": 34
+      },
+      "pressure": 1009,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 191,
+      "ozone": 272
+    },
+    {
+      "date": "2020-10-01T08:00:00",
+      "weather": "mostly_cloudy",
+      "icon": 5,
+      "temperature": 12.4,
+      "soil_temperature": 10.9,
+      "dew_point": 9.59,
+      "surface_temperature": 15.05,
+      "wind": {
+        "speed": 1,
+        "gusts": 4,
+        "angle": 299,
+        "dir": "WNW"
+      },
+      "cloud_cover": {
+        "total": 60,
+        "low": 32,
+        "middle": 21,
+        "high": 42
+      },
+      "pressure": 1008,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 259,
+      "ozone": 272
+    },
+    {
+      "date": "2020-10-01T09:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 13.8,
+      "soil_temperature": 12.5,
+      "dew_point": 10.68,
+      "surface_temperature": 16.81,
+      "wind": {
+        "speed": 1,
+        "gusts": 5,
+        "angle": 322,
+        "dir": "NW"
+      },
+      "cloud_cover": {
+        "total": 49,
+        "low": 15,
+        "middle": 33,
+        "high": 24
+      },
+      "pressure": 1008,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 331,
+      "ozone": 272
+    },
+    {
+      "date": "2020-10-01T10:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 15.4,
+      "soil_temperature": 14,
+      "dew_point": 10.52,
+      "surface_temperature": 18.42,
+      "wind": {
+        "speed": 1,
+        "gusts": 5,
+        "angle": 316,
+        "dir": "NW"
+      },
+      "cloud_cover": {
+        "total": 43,
+        "low": 15,
+        "middle": 34,
+        "high": 8
+      },
+      "pressure": 1007,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 418,
+      "ozone": 275
+    },
+    {
+      "date": "2020-10-01T11:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 16.8,
+      "soil_temperature": 15.4,
+      "dew_point": 10.09,
+      "surface_temperature": 20.42,
+      "wind": {
+        "speed": 1,
+        "gusts": 5,
+        "angle": 328,
+        "dir": "NNW"
+      },
+      "cloud_cover": {
+        "total": 43,
+        "low": 9,
+        "middle": 32,
+        "high": 14
+      },
+      "pressure": 1006,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 388,
+      "ozone": 276
+    },
+    {
+      "date": "2020-10-01T12:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 17.7,
+      "soil_temperature": 16.4,
+      "dew_point": 9.84,
+      "surface_temperature": 20,
+      "wind": {
+        "speed": 1,
+        "gusts": 4,
+        "angle": 336,
+        "dir": "NNW"
+      },
+      "cloud_cover": {
+        "total": 40,
+        "low": 9,
+        "middle": 29,
+        "high": 14
+      },
+      "pressure": 1005,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 365,
+      "ozone": 276
+    },
+    {
+      "date": "2020-10-01T13:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 18,
+      "soil_temperature": 16.8,
+      "dew_point": 9.77,
+      "surface_temperature": 19.5,
+      "wind": {
+        "speed": 1,
+        "gusts": 4,
+        "angle": 1,
+        "dir": "N"
+      },
+      "cloud_cover": {
+        "total": 50,
+        "low": 11,
+        "middle": 35,
+        "high": 20
+      },
+      "pressure": 1005,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 331,
+      "ozone": 276
+    },
+    {
+      "date": "2020-10-01T14:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 18.4,
+      "soil_temperature": 17.1,
+      "dew_point": 9.8,
+      "surface_temperature": 18.45,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 21,
+        "dir": "NNE"
+      },
+      "cloud_cover": {
+        "total": 32,
+        "low": 3,
+        "middle": 28,
+        "high": 3
+      },
+      "pressure": 1004,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 242,
+      "ozone": 276
+    },
+    {
+      "date": "2020-10-01T15:00:00",
+      "weather": "mostly_sunny",
+      "icon": 3,
+      "temperature": 18.2,
+      "soil_temperature": 17,
+      "dew_point": 9.79,
+      "surface_temperature": 17.44,
+      "wind": {
+        "speed": 0,
+        "gusts": 2,
+        "angle": 24,
+        "dir": "NNE"
+      },
+      "cloud_cover": {
+        "total": 19,
+        "low": 0,
+        "middle": 19,
+        "high": 0
+      },
+      "pressure": 1004,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 103,
+      "ozone": 277
+    },
+    {
+      "date": "2020-10-01T16:00:00",
+      "weather": "sunny",
+      "icon": 2,
+      "temperature": 16.3,
+      "soil_temperature": 16.4,
+      "dew_point": 10.84,
+      "surface_temperature": 14.34,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 57,
+        "dir": "ENE"
+      },
+      "cloud_cover": {
+        "total": 4,
+        "low": 0,
+        "middle": 4,
+        "high": 0
+      },
+      "pressure": 1003,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 12,
+      "ozone": 278
+    },
+    {
+      "date": "2020-10-01T17:00:00",
+      "weather": "sunny",
+      "icon": 2,
+      "temperature": 13.3,
+      "soil_temperature": 14.9,
+      "dew_point": 10.12,
+      "surface_temperature": 11.29,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 73,
+        "dir": "ENE"
+      },
+      "cloud_cover": {
+        "total": 3,
+        "low": 0,
+        "middle": 1,
+        "high": 1
+      },
+      "pressure": 1004,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 278
+    },
+    {
+      "date": "2020-10-01T18:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 11.8,
+      "soil_temperature": 13.6,
+      "dew_point": 9.73,
+      "surface_temperature": 10.41,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 95,
+        "dir": "E"
+      },
+      "cloud_cover": {
+        "total": 22,
+        "low": 0,
+        "middle": 1,
+        "high": 21
+      },
+      "pressure": 1004,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 279
+    },
+    {
+      "date": "2020-10-01T19:00:00",
+      "weather": "mostly_sunny",
+      "icon": 3,
+      "temperature": 10.9,
+      "soil_temperature": 12.5,
+      "dew_point": 9.17,
+      "surface_temperature": 9.91,
+      "wind": {
+        "speed": 1,
+        "gusts": 2,
+        "angle": 123,
+        "dir": "ESE"
+      },
+      "cloud_cover": {
+        "total": 18,
+        "low": 2,
+        "middle": 1,
+        "high": 16
+      },
+      "pressure": 1004,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 280
+    },
+    {
+      "date": "2020-10-01T20:00:00",
+      "weather": "mostly_sunny",
+      "icon": 3,
+      "temperature": 10.4,
+      "soil_temperature": 11.9,
+      "dew_point": 8.92,
+      "surface_temperature": 9.16,
+      "wind": {
+        "speed": 1,
+        "gusts": 2,
+        "angle": 153,
+        "dir": "SSE"
+      },
+      "cloud_cover": {
+        "total": 12,
+        "low": 3,
+        "middle": 0,
+        "high": 9
+      },
+      "pressure": 1004,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 281
+    },
+    {
+      "date": "2020-10-01T21:00:00",
+      "weather": "mostly_sunny",
+      "icon": 3,
+      "temperature": 9.1,
+      "soil_temperature": 11.3,
+      "dew_point": 8.16,
+      "surface_temperature": 8.6,
+      "wind": {
+        "speed": 1,
+        "gusts": 2,
+        "angle": 167,
+        "dir": "SSE"
+      },
+      "cloud_cover": {
+        "total": 20,
+        "low": 6,
+        "middle": 0,
+        "high": 14
+      },
+      "pressure": 1004,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 282
+    },
+    {
+      "date": "2020-10-01T22:00:00",
+      "weather": "partly_sunny",
+      "icon": 4,
+      "temperature": 9,
+      "soil_temperature": 11.2,
+      "dew_point": 8.32,
+      "surface_temperature": 7.98,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 180,
+        "dir": "S"
+      },
+      "cloud_cover": {
+        "total": 48,
+        "low": 7,
+        "middle": 0,
+        "high": 42
+      },
+      "pressure": 1003,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 283
+    },
+    {
+      "date": "2020-10-01T23:00:00",
+      "weather": "mostly_cloudy",
+      "icon": 5,
+      "temperature": 8.6,
+      "soil_temperature": 10.7,
+      "dew_point": 7.96,
+      "surface_temperature": 7.25,
+      "wind": {
+        "speed": 1,
+        "gusts": 3,
+        "angle": 198,
+        "dir": "SSW"
+      },
+      "cloud_cover": {
+        "total": 72,
+        "low": 9,
+        "middle": 7,
+        "high": 71
+      },
+      "pressure": 1003,
+      "precipitation": {
+        "total": 0,
+        "type": "none"
+      },
+      "cape": 0,
+      "evaporation": 0,
+      "irradiance": 0,
+      "ozone": 284
+    }
+  ]
 }
