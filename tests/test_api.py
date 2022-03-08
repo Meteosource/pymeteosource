@@ -11,8 +11,9 @@ import pandas
 
 from pymeteosource.api import Meteosource
 from pymeteosource.types import tiers, endpoints, units, sections
-from pymeteosource.data import Forecast, SingleTimeData, MultipleTimesData
 from pymeteosource.types.time_formats import F1
+from pymeteosource.data import (Forecast, SingleTimeData, MultipleTimesData,
+                                AlertsData)
 from pymeteosource.errors import (InvalidArgumentError, InvalidIndexTypeError,
                                   InvalidStrIndexError, EmptyInstanceError,
                                   InvalidDatetimeIndexError, InvalidDateFormat,
@@ -23,7 +24,7 @@ from .dst_changes_data import LONG_DAY
 from .variables_list import (CURRENT, PRECIPITATION_CURRENT, WIND, MINUTELY,
                              HOURLY, CLOUD, PRECIPITATION, PROBABILITY, DAILY,
                              ALL_DAY, PART_DAY, ASTRO, SUN, MOON, STATS,
-                             STATS_TEMP, STATS_WIND, STATS_PREC)
+                             STATS_TEMP, STATS_WIND, STATS_PREC, ALERTS)
 
 sys.path.insert(0, realpath(join(dirname(__file__), "..")))
 
@@ -235,6 +236,9 @@ def test_to_pandas():
     assert len(df) == 30
     assert isinstance(df.index, pandas.core.indexes.datetimes.DatetimeIndex)
 
+    df = f.alerts.to_pandas()
+    assert len(df) == 4
+
 
 def test_to_dict():
     """Test exporting to pandas"""
@@ -312,6 +316,9 @@ def test_forecast_structure():
     assert set(f.daily[0].statistics.wind.get_members()) == STATS_WIND
     assert set(f.daily[0].statistics.precipitation.get_members()) == STATS_PREC
 
+    # Check alerts section
+    assert isinstance(f.alerts, AlertsData)
+
     # Check correct exception raising when minutely data are not present
     m = Meteosource(API_KEY, tiers.FREE)
     # Get real forecast data (not mocked)
@@ -344,3 +351,23 @@ def test_time_machine_structure():
     assert len(tm.data) == 120
     dt = pytz.utc.localize(datetime(2019, 5, 5)).astimezone(kbl)
     assert tm.data[0].date == dt
+
+
+def test_alerts():
+    """Test alerts"""
+    m = Meteosource(API_KEY, tiers.PREMIUM)
+    # We mock the API requests with sample data
+    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
+    # Get the mocked alerts data
+    alerts = m.get_point_forecast(place_id='london', tz='UTC').alerts
+
+    assert len(alerts) == 4
+    for a in alerts:
+        assert set(a.get_members()) == ALERTS
+
+    assert alerts[3].event == 'Moderate Thunderstorms'
+    assert len(alerts.get_active_alerts('2022-03-08T22:10:00')) == 3
+    assert len(alerts.get_active_alerts(datetime(2022, 3, 8, 23, 0, 0))) == 3
+
+    dt = pytz.timezone("Asia/Bangkok").localize(datetime(2022, 3, 8, 23, 0, 0))
+    assert len(alerts.get_active_alerts(dt)) == 2

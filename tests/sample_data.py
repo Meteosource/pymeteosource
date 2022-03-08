@@ -11316,6 +11316,48 @@ SAMPLE_POINT = {
                 }
             }
         ]
+    },
+    "alerts":{
+        "data":[{
+            "event": "Ice",
+            "onset": "2022-03-08T22:00:00",
+            "expires": "2022-03-09T21:59:00",
+            "sender": "HNMS",
+            "certainty": "Likely",
+            "severity": "Moderate",
+            "headline": "Yellow warning for East Peloponnisos",
+            "description": "Snowfall over mountainous and semi-mountainous areas."
+          },
+          {
+            "event": "Rain",
+            "onset": "2022-03-08T23:00:00",
+            "expires": "2022-03-09T21:59:00",
+            "sender": "HNMS",
+            "certainty": "Likely",
+            "severity": "Moderate",
+            "headline": "Yellow warning for East Peloponnisos",
+            "description": "Rain."
+           },
+          {
+            "event": "Low Temperature",
+            "onset": "2022-03-08T16:00:00",
+            "expires": "2022-03-10T21:59:00",
+            "sender": "HNMS",
+            "certainty": "Likely",
+            "severity": "Moderate",
+            "headline": "Yellow warning for East Peloponnisos",
+            "description": "Low temperatures / frost."
+           },
+          {
+            "event": "Moderate Thunderstorms",
+            "onset": "2022-03-08T14:00:00",
+            "expires": "2022-03-08T22:59:00",
+            "sender": "HNMS",
+            "certainty": "Likely",
+            "severity": "Moderate",
+            "headline": "Yellow warning for East Peloponnisos",
+            "description": "LOCALLY THUNDERSTORMS"
+           }]
     }
 }
 

@@ -128,7 +128,7 @@ time_machine.timezone  # 'UTC'
 
 ### Weather data sections
 
-There are 4 weather forecast sections (`current`, `minutely`, `hourly` and `daily`) as attributes in the `Forecast` object.
+There are 5 weather forecast sections (`current`, `minutely`, `hourly`, `daily` and `alerts`) as attributes in the `Forecast` object.
 
 The `current` data contains data for many variables for a single point in time (it is represented by `SingleTimeData` object):
 
@@ -151,6 +151,24 @@ The sections that were requested can also be `print`ed, to view number of availa
 # <Instance of MultipleTimesData (hourly) with 164 timesteps
 #  from 2021-09-08T22:00:00 to 2021-09-15T17:00:00>
 print(forecast.hourly)
+```
+
+The `alerts` section contain meteorological alerts and warnings, if there are any issued for the location. The `alerts` object is an instance of `AlertsData` class. You can print the object or iterate over it:
+```python
+print(forecast.alerts) # <Instance of AlertsData containing 4 alerts>
+for alert in alerts:
+    # <Instance of SingleTimeData (alert) with 8 member variables
+    #  (certainty, description, event, expires, headline, onset, sender, severity)>
+    print(alert)
+```
+You can also get list of all active alerts for given time. If you use `str` or tz-naive `datetime` in this function, it will suppose that it is in the same timezone as requested for the forecast.
+```python
+# If you pass no parameter, it checks for current time
+forecast.alerts.get_active_alerts() # returns list of SingleTimeData instances
+# You can use either string...
+forecast.alerts.get_active_alerts('2022-03-08T22:00:00')
+# ... or datetime (both tz-aware and naive)
+forecast.alerts.get_active_alerts(datetime(2022, 3, 8, 23, 0, 0))
 ```
 
 There is a single section `data` for historical weather as an attribute in the `TimeMachine` object, represented by `MultipleTimesData`.

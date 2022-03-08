@@ -33,14 +33,12 @@ ALL_DAY = {'weather', 'icon', 'temperature', 'temperature_min',
            'dew_point_min', 'dew_point_max', 'surface_temperature',
            'surface_temperature_min', 'surface_temperature_max', 'wind',
            'cloud_cover', 'pressure', 'precipitation', 'probability',
-           'evaporation', 'irradiance', 'ozone', 'humidity', 'snow_depth',
-           'sunshine_duration', 'visibility'}
+           'ozone', 'humidity', 'snow_depth', 'visibility'}
 
 PART_DAY = {'weather', 'icon', 'temperature', 'feels_like', 'soil_temperature',
             'wind_chill', 'dew_point', 'surface_temperature', 'wind',
             'cloud_cover', 'pressure', 'precipitation', 'probability',
-            'evaporation', 'irradiance', 'ozone', 'humidity', 'snow_depth',
-            'sunshine_duration', 'visibility'}
+            'ozone', 'humidity', 'snow_depth', 'visibility'}
 ASTRO = {'sun', 'moon'}
 
 SUN = {'rise', 'set', 'always_up', 'always_down'}
@@ -52,3 +50,5 @@ STATS = {'temperature', 'wind', 'precipitation'}
 STATS_TEMP = {'avg', 'avg_min', 'avg_max', 'record_min', 'record_max'}
 STATS_WIND = {'avg_speed', 'avg_angle', 'avg_dir', 'max_speed', 'max_gust'}
 STATS_PREC = {'avg', 'probability'}
+ALERTS = {'event', 'onset', 'expires', 'sender', 'certainty', 'severity',
+          'headline', 'description'}

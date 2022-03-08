@@ -7,7 +7,8 @@ import pytz
 from .types.time_formats import F1, F2
 from .errors import (InvalidStrIndexError, InvalidIndexTypeError,
                      InvalidDatetimeIndexError, EmptyInstanceError,
-                     InvalidClassType)
+                     InvalidClassType, InvalidAlertIndexTypeError,
+                     InvalidDateFormat)
 
 
 class BaseData:
@@ -68,7 +69,7 @@ class BaseData:
                 # None values can occur in the data
                 if value is not None:
                     # Items that contain datetime and need to be localized
-                    if key in ('date', 'rise', 'set'):
+                    if key in ('date', 'rise', 'set', 'onset', 'expires'):
                         # Convert to datetime
                         dt = datetime.strptime(value, F1)
                         # Localize from UTC
@@ -113,7 +114,7 @@ class BaseData:
             return None
 
         # This is the basic use case - rows are the timesteps
-        if isinstance(self, MultipleTimesData):
+        if isinstance(self, (MultipleTimesData, AlertsData)):
             # pylint: disable=E1101
             df = pd.DataFrame([x.to_dict() for x in self.data])
         # This is also possible, but results in 1-row DataFrame
@@ -138,6 +139,8 @@ class BaseData:
         """
         c, members = self.__class__.__name__, self.get_members()
         date = getattr(self, 'date', getattr(self, 'day', 'current'))
+        if getattr(self, 'expires'):
+            date = 'alert'
         return ('<Instance of {} ({}) with {} member variables ({})>'.format(
             c, date, len(members), ', '.join(members)))
 
@@ -146,6 +149,107 @@ class BaseData:
         Override __getitem__ to allow variable access using [] operator
         """
         return getattr(self, attr)
+
+
+class AlertsData(BaseData):
+    """
+    Class that represents alerts data
+
+    Attributes
+    ----------
+    data : list
+        List of SingleTimeData instances, each containing single alert
+
+    Methods
+    -------
+    get_active_alerts : list
+        Get all alerts that are active at given time
+    """
+
+    def __init__(self, data, timezone):
+        """
+        :param dict: The alerts data from the API
+        :param str: String identifier of used timezone
+        """
+        # Call the parent's constructor to initialize the timezone
+        super().__init__(timezone)
+        # Keep empty instance if no data are available
+        if data is None:
+            return
+
+        # Build the list of SingleTimeData instances from the data
+        self.data = [SingleTimeData(x, self._timezone) for x in data['data']]
+
+    def get_active_alerts(self, orig_dt=None):
+        """
+        Get all alerts that are active at given time
+
+        :param None/str/datetime: If None, assume current time.
+                                  String in YYYY-MM-DDTHH:MM:SS format.
+                                  If datetime is tz-non aware, data timezone is assumed.
+        :return list: List of SingleTimeData representing alerts active at given time
+        """
+        # Initialize pytz timezone object using the data's timezone
+        tz = pytz.timezone(self._timezone)
+
+        # If orig_dt is None, we use current time
+        if orig_dt is None:
+            dt = datetime.now(tz)
+        # For strings, we first convert to datetime and then make if tz-aware
+        elif isinstance(orig_dt, str):
+            try:
+                orig_dt = datetime.strptime(orig_dt, F1)
+            except ValueError as ex:
+                raise InvalidDateFormat(orig_dt, F1) from ex
+            dt = tz.localize(orig_dt)
+        # For datetimes
+        elif isinstance(orig_dt, datetime):
+            # If it is tz-naive, we set the tzinfo
+            if orig_dt.tzinfo is None:
+                dt = tz.localize(orig_dt)
+            else:
+                # Else we just copy it
+                dt = orig_dt
+        else:
+            raise InvalidClassType(type(orig_dt))
+
+        # Return all Alerts that are active at 'dt' time
+        return [x for x in self.data if x.onset <= dt <= x.expires]
+
+    def __repr__(self):
+        """
+        Override __repr__ to have usefull text when attepting to print
+        """
+        c = self.__class__.__name__
+        return '<Instance of {} containing {} alerts>'.format(c, len(self.data))
+
+    def __getitem__(self, attr):
+        """
+        Override __getitem__ to allow variable access using [] operator
+        """
+        # We only allow integer indices
+        if not isinstance(attr, int):
+            raise InvalidAlertIndexTypeError(type(attr))
+        # Raise when trying to index empty instance
+        if len(self.data) == 0:
+            raise EmptyInstanceError()
+
+        return self.data[attr]
+
+    def __len__(self):
+        """
+        Override __len__ to support len() calls to the instance
+        """
+        try:
+            return len(self.data)
+        except AttributeError:
+            return 0
+
+    def __iter__(self):
+        """
+        Override __iter__ to support alert iterator
+        """
+        return iter(self.data)
 
 
 class SingleTimeData(BaseData):
@@ -196,7 +300,7 @@ class SingleTimeData(BaseData):
 
 class MultipleTimesData(BaseData):
     """
-    Class that represents data in single point in time
+    Class that represents data in multiple points in time
 
     This class is used to represent 'current' section, and the individual
     timesteps of 'minutely', 'hourly', 'daily' or 'time_machine'.
@@ -357,6 +461,7 @@ class Forecast:
                                         'hourly', self.timezone)
         self.daily = MultipleTimesData(data.get('daily', None),
                                        'daily', self.timezone)
+        self.alerts = AlertsData(data.get('alerts', None), self.timezone)
 
     def __repr__(self):
         """

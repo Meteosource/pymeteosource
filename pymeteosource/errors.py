@@ -63,6 +63,26 @@ class InvalidIndexTypeError(ValueError):
         super().__init__(self.message)
 
 
+class InvalidAlertIndexTypeError(ValueError):
+    """
+    Exception that is raised when illegal index type is used
+    for indexing MultipleTimesData.
+
+    Attributes
+    ----------
+    MSG : string
+        The exceptions message to print
+    """
+    MSG = 'Invalid index data type "%s" to AlertsData!'
+
+    def __init__(self, parameter):
+        """
+        :param str: The value that was incorrectly used
+        """
+        self.message = self.MSG % parameter
+        super().__init__(self.message)
+
+
 class InvalidDatetimeIndexError(ValueError):
     """
     Exception that is raised when datetime used to index MultipleTimesData
@@ -125,7 +145,7 @@ class InvalidDateFormat(ValueError):
 
 class InvalidClassType(ValueError):
     """
-    Exception that is raised when wrong date format is passed
+    Exception that is raised when wrong class type is passed
 
     Attributes
     ----------
