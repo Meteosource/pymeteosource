@@ -51,7 +51,7 @@ from pymeteosource.types import tiers
 # Change this to your actual API key
 YOUR_API_KEY = 'abcdefghijklmnopqrstuvwxyz0123456789ABCD'
 # Change this to your actual tier
-YOUR_TIER = tiers.PREMIUM
+YOUR_TIER = tiers.FLEXI
 
 # Initialize the main Meteosource object
 meteosource = Meteosource(YOUR_API_KEY, YOUR_TIER)

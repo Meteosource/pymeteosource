@@ -3,4 +3,4 @@
 FREE = 'free'
 STARTUP = 'startup'
 STANDARD = 'standard'
-PREMIUM = 'premium'
+FLEXI = 'flexi'
