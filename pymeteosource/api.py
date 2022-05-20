@@ -199,6 +199,8 @@ class Meteosource:
 
         # Update parameters with location selection, date will be added in loop
         pars = self._build_location_pars({'units': units}, place_id, lat, lon)
+        # We need to specify UTC timezone
+        pars['timezone'] = 'UTC'
 
         # Get list of dates to retrieve
         dates = self._get_tm_dates(date, date_from, date_to)

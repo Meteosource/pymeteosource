@@ -139,7 +139,7 @@ class BaseData:
         """
         c, members = self.__class__.__name__, self.get_members()
         date = getattr(self, 'date', getattr(self, 'day', 'current'))
-        if getattr(self, 'expires'):
+        if getattr(self, 'expires', None):
             date = 'alert'
         return ('<Instance of {} ({}) with {} member variables ({})>'.format(
             c, date, len(members), ', '.join(members)))
