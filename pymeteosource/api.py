@@ -29,16 +29,18 @@ class Meteosource:
     get_point_forecast
         Get forecast data for given point
     """
-    def __init__(self, api_key, tier, host='https://www.meteosource.com/api'):
+    def __init__(self, api_key, tier, host='https://www.meteosource.com/api',
+                 use_gzip=True):
         """
         Basic constructor
 
         :param str: API key
         :param str: Tier the user is using
         :param str: Host URL of the Meteosource API
+        :param bool: True if gzip compression should be used, False otherwise
         """
         # Initialize the request handler with the API key
-        self.req_handler = RequestHandler(api_key)
+        self.req_handler = RequestHandler(api_key, use_gzip)
         self.host = host
         self.tier = tier
 
