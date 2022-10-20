@@ -261,7 +261,6 @@ For historical weather data, you can also call the method on the `TimeMachine` o
 ```python
 time_machine.data.to_pandas()
 time_machine.to_pandas()
-print(df)
 ```
 
 
