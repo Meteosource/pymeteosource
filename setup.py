@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 
 setup(
-    version="1.3.0",
+    version="1.4.0",
     name="pymeteosource",
     packages=find_packages(),
     install_requires=["wheel", "requests", "pytz"],
@@ -10,7 +10,7 @@ setup(
     description="Meteosource API wrapper library",
     author="Meteosource",
     author_email="support@meteosource.com",
-    url="https://github.com/Meteosource/pymeteosource/archive/v1.3.0.tar.gz",
+    url="https://github.com/Meteosource/pymeteosource/archive/v1.4.0.tar.gz",
     license="MIT",
     classifiers=[
         "Environment :: Web Environment",

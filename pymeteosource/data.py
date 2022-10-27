@@ -5,6 +5,7 @@ from datetime import datetime
 import pytz
 
 from .types.time_formats import F1, F2
+from .types.icons import ICONS
 from .errors import (InvalidStrIndexError, InvalidIndexTypeError,
                      InvalidDatetimeIndexError, EmptyInstanceError,
                      InvalidClassType, InvalidAlertIndexTypeError,
@@ -510,6 +511,11 @@ class TimeMachine:
         self.timezone = tz
         self.units = data['units']
         self.data = MultipleTimesData(data, 'time_machine', self.timezone)
+
+        # Assing human-readable weather category from icon number
+        for x in self.data.data:
+            x.weather = ICONS.get(x.icon, 1)['weather']
+            x.weather_id = ICONS.get(x.icon, 1)['weather_id']
 
     def append(self, other):
         """
