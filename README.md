@@ -1,7 +1,11 @@
 pymeteosource - Weather API library
 ==========
 
-Python wrapper library for [Meteosource weather API](https://www.meteosource.com) that provides detailed hyperlocal weather forecasts for any location on earth.
+[Meteosource weather API](https://www.meteosource.com) provides accurate global weather data - get real-time, forecast, and historical hyperlocal data.
+
+Meteosource weather forecasts are based on cutting-edge machine-learning models. The algorithms learn from historical data and forecasts from many [different models](https://www.meteosource.com/meteosource-technology), compare their data from different places and meteorological situations and create a single output to provide accurate hyperlocal weather forecasts anywhere in the world. Receive minute-by-minute rain forecast, detailed hour-by-hour weather forecast out to 7 days, and much more!
+
+Using this python wrapper library, you can easily implement Meteosource JSON data into your app or service.
 
 
 ### Installation
