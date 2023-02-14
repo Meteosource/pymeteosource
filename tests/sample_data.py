@@ -12087,5 +12087,25 @@ SAMPLE_TIME_MACHINE = {
       "irradiance": 0,
       "ozone": 284
     }
-  ]
+  ],
+    "statistics":{
+      "temperature":{
+         "avg":13.0,
+         "avg_min":8.5,
+         "avg_max":17.5,
+         "record_min":2.0,
+         "record_max":25.2
+      },
+      "wind":{
+         "avg_speed":2.9,
+         "avg_angle":183,
+         "avg_dir":"S",
+         "max_speed":10.4,
+         "max_gust":20.9
+      },
+      "precipitation":{
+         "avg":1.0,
+         "probability":31
+      }
+   }
 }
