@@ -228,7 +228,7 @@ class Meteosource:
             data = self.req_handler.execute_request(url, **pars)
 
             # Create a TimeMachine instance
-            cur_tm = TimeMachine(data, tz)
+            cur_tm = TimeMachine(data, tz, d)
 
             # Assign the current instance to the result, or append it
             if tm is None:

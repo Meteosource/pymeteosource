@@ -1,7 +1,7 @@
 """Module with classes that represent the API data"""
 
 from warnings import warn
-from datetime import datetime
+from datetime import datetime, date
 import pytz
 
 from .types.time_formats import F1, F2
@@ -78,7 +78,8 @@ class BaseData:
                     # Items that only contain day (not hours, etc.)
                     if key == 'day':
                         # Only convert to datetime
-                        value = datetime.strptime(value, F2)
+                        if not isinstance(value, date):
+                            value = datetime.strptime(value, F2)
 
                 # Save the data into the instance attribute
                 setattr(self, key, value)
@@ -328,7 +329,7 @@ class MultipleTimesData(BaseData):
 
         # Get the datetime column based on the 'data_type'
         self.data_type = data_type
-        if self.data_type == 'daily':
+        if self.data_type in ('daily', 'statistics'):
             date_col, form = 'day', F2
         else:
             date_col, form = 'date', F1
@@ -496,13 +497,15 @@ class TimeMachine:
         Units set of the data
     data : MultipleTimesData
         The acutal archive data
+    statistics : MultipleTimesData
+        Long term normals (statistics)
 
     Methods
     -------
     to_pandas
         Export the data to pandas DataFrame
     """
-    def __init__(self, data, tz):
+    def __init__(self, data, tz, day):
         lat, lon = data['lat'], data['lon']
         # Parse the lat, lon string values to floats
         self.lat = float(lat[:-1]) if lat[-1] == 'N' else -float(lat[:-1])
@@ -511,6 +514,10 @@ class TimeMachine:
         self.timezone = tz
         self.units = data['units']
         self.data = MultipleTimesData(data, 'time_machine', self.timezone)
+        # Preprocess statistics to fit data structures
+        statistics = {'data': [{'statistics': data['statistics']}]}
+        statistics['data'][0]['day'] = day
+        self.statistics = MultipleTimesData(statistics, 'statistics', 'UTC')
 
         # Assing human-readable weather category from icon number
         for x in self.data.data:
@@ -525,6 +532,7 @@ class TimeMachine:
         """
         # Call MultipleTimesData's 'append' method
         self.data.append(other.data)
+        self.statistics.append(other.statistics)
 
     def __repr__(self):
         """
@@ -538,7 +546,7 @@ class TimeMachine:
         """
         return getattr(self, attr)
 
-    def to_pandas(self):
+    def to_pandas(self, include_statistics=False):
         """
         Export the data to pandas DataFrame
 
@@ -548,6 +556,21 @@ class TimeMachine:
         feature, use 'pip install pymeteosource[pandas]' to install this
         package, or install pandas manually using 'pip install pandas'.
 
+        :param bool: If True, includes daily long term statistics epanded to hours
         :return pandas.DataFrame: The DataFrame with 'date' as index
         """
-        return self.data.to_pandas()
+        res = self.data.to_pandas()
+        if not include_statistics:
+            return res
+
+        # Convert statistics to pandas
+        stats = self.statistics.to_pandas()
+        # Create helper column to merge the data on
+        res['day'] = res.index.tz_convert('UTC').date
+
+        # Merge the data with statistics and reset index to original
+        res = res.reset_index().merge(stats, on='day', how='left').set_index('date')
+        # Drop the helper column
+        res = res.drop('day', axis=1)
+
+        return res

@@ -88,7 +88,7 @@ forecast = meteosource.get_point_forecast(
 ```
 
 ### Historical weather
-Users with paid subscription to Meteosource can retrieve historical weather from `time_machine` endpoint, using `get_time_machine()` method:
+Users with paid subscription to Meteosource can retrieve historical weather and long-term statistics from `time_machine` endpoint, using `get_time_machine()` method:
 
 ```python
 # Get the historical weather
@@ -103,7 +103,7 @@ time_machine = meteosource.get_time_machine(
     units=units.US  # Defaults to 'auto'
 )
 ```
-Note, that the historical weather data are always retrieved for full UTC days. If you specify a different timezone, the datetimes get converted, but they will cover the full UTC, not the local day. If you specify a `datetime` to any of the date parameters, the hours, minutes, seconds and microseconds get ignored. So if you request `date='2021-12-25T23:59:59'`, you get data for full UTC day `2021-12-25`.
+Note, that the historical weather data and long-term statistics are always retrieved for full UTC days. If you specify a different timezone, the datetimes get converted, but they will cover the full UTC, not the local day. If you specify a `datetime` to any of the date parameters, the hours, minutes, seconds and microseconds get ignored. So if you request `date='2021-12-25T23:59:59'`, you get data for full UTC day `2021-12-25`.
 
 If you pass `list`/`tuple`/`set` of dates to `date` parameter, they days will be inserted into the inner structures in the order they are being iterated over. This affects time indexing by integer (see below). An API request is made for each day, even when you specify a date range.
 
@@ -175,9 +175,10 @@ forecast.alerts.get_active_alerts('2022-03-08T22:00:00')
 forecast.alerts.get_active_alerts(datetime(2022, 3, 8, 23, 0, 0))
 ```
 
-There is a single section `data` for historical weather as an attribute in the `TimeMachine` object, represented by `MultipleTimesData`.
+There are sections `data` and `statistics` for historical weather as attributes in the `TimeMachine` object, both represented by `MultipleTimesData`.
 ```python
 print(time_machine.data)  # <Instance of MultipleTimesData (time_machine) with 24 timesteps from 2019-12-25T00:00:00 to 2019-12-25T23:00:00>
+print(time_machine.statistics)  # <Instance of MultipleTimesData (statistics) with 1 timesteps from 2019-12-25 to 2019-12-25>
 ```
 
 ### Time indexing
@@ -261,12 +262,17 @@ df = forecast.hourly.to_pandas()
 print(df)
 ```
 
-For historical weather data, you can also call the method on the `TimeMachine` object directly, so both following calls are valid:
+For historical weather data, you can also call the method on the `TimeMachine` object directly, so all following calls are valid:
 ```python
 time_machine.data.to_pandas()
+time_machine.statistics.to_pandas()
 time_machine.to_pandas()
 ```
 
+You can also merge the daily statistics and the hourly historical data into single `pandas` `DataFrame`. In this case, the daily statistics are duplicated into all hours of each day:
+```python
+time_machine.to_pandas(include_statistics=True)
+```
 
 
 ### Contact us
