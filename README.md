@@ -88,7 +88,7 @@ forecast = meteosource.get_point_forecast(
 ```
 
 ### Historical weather
-Users with paid subscription to Meteosource can retrieve historical weather and long-term statistics from `time_machine` endpoint, using `get_time_machine()` method:
+Users with paid subscription to Meteosource can retrieve historical weather, daily summaries and long-term statistics from `time_machine` endpoint, using `get_time_machine()` method:
 
 ```python
 # Get the historical weather
@@ -175,10 +175,11 @@ forecast.alerts.get_active_alerts('2022-03-08T22:00:00')
 forecast.alerts.get_active_alerts(datetime(2022, 3, 8, 23, 0, 0))
 ```
 
-There are sections `data` and `statistics` for historical weather as attributes in the `TimeMachine` object, both represented by `MultipleTimesData`.
+There are sections `data`, `daily` and `statistics` for historical weather as attributes in the `TimeMachine` object, both represented by `MultipleTimesData`.
 ```python
 print(time_machine.data)  # <Instance of MultipleTimesData (time_machine) with 24 timesteps from 2019-12-25T00:00:00 to 2019-12-25T23:00:00>
 print(time_machine.statistics)  # <Instance of MultipleTimesData (statistics) with 1 timesteps from 2019-12-25 to 2019-12-25>
+print(time_machine.daily)  # <Instance of MultipleTimesData (daily) with 1 timesteps from 2019-12-25 to 2019-12-25>
 ```
 
 ### Time indexing
@@ -265,6 +266,7 @@ print(df)
 For historical weather data, you can also call the method on the `TimeMachine` object directly, so all following calls are valid:
 ```python
 time_machine.data.to_pandas()
+time_machine.daily.to_pandas()
 time_machine.statistics.to_pandas()
 time_machine.to_pandas()
 ```

@@ -518,6 +518,10 @@ class TimeMachine:
         statistics = {'data': [{'statistics': data['statistics']}]}
         statistics['data'][0]['day'] = day
         self.statistics = MultipleTimesData(statistics, 'statistics', 'UTC')
+        # Preprocess daily to fit data structures
+        daily = {'data': [{'daily': data['daily']}]}
+        daily['data'][0]['day'] = day
+        self.daily = MultipleTimesData(daily, 'daily', 'UTC')
 
         # Assing human-readable weather category from icon number
         for x in self.data.data:
@@ -533,6 +537,7 @@ class TimeMachine:
         # Call MultipleTimesData's 'append' method
         self.data.append(other.data)
         self.statistics.append(other.statistics)
+        self.daily.append(other.daily)
 
     def __repr__(self):
         """
