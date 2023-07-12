@@ -559,12 +559,18 @@ class TimeMachine:
         :param bool: If True, includes daily long term statistics epanded to hours
         :return pandas.DataFrame: The DataFrame with 'date' as index
         """
+        from pandas.api.types import is_datetime64_any_dtype as is_datetime
+
         res = self.data.to_pandas()
         if not include_statistics:
             return res
 
         # Convert statistics to pandas
         stats = self.statistics.to_pandas()
+        if is_datetime(stats.index):
+            stats.index = stats.index.date
+            stats.index.name = 'day'
+
         # Create helper column to merge the data on
         res['day'] = res.index.tz_convert('UTC').date
 
