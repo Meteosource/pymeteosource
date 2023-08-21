@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 
 setup(
-    version="1.6.0",
+    version="1.7.0",
     name="pymeteosource",
     packages=find_packages(),
     install_requires=["wheel", "requests", "pytz"],

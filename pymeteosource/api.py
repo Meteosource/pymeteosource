@@ -89,7 +89,8 @@ class Meteosource:
 
     def get_point_forecast(self, place_id=None, lat=None, lon=None,
                            sections=(sections.CURRENT, sections.HOURLY),
-                           tz='UTC', lang=langs.ENGLISH, units=units.AUTO):
+                           tz='UTC', lang=langs.ENGLISH, units=units.AUTO,
+                           endpoint=endpoints.POINT):
         """
         Get forecast data for given point
 
@@ -100,10 +101,11 @@ class Meteosource:
         :param str: Timezone for final output. Requests are always made in UTC!
         :param str: Language
         :param str: Units to use
+        :param str: Endpoint to use, can be overriden
         :return Forecast: Forecast object with the forecast data
         """
         # Build the URL for the request
-        url = self._build_url(endpoints.POINT)
+        url = self._build_url(endpoint)
         if isinstance(sections, (list, tuple)):
             sections = ','.join(sections)
         # Parameters of the request, the requested tz is always UTC!
@@ -178,7 +180,7 @@ class Meteosource:
 
     def get_time_machine(self, date=None, date_from=None, date_to=None,
                          place_id=None, lat=None, lon=None, tz='UTC',
-                         units=units.AUTO):
+                         units=units.AUTO, endpoint=endpoints.TIME_MACHINE):
         """
         Get archive data from time_machine endpoint
 
@@ -194,10 +196,11 @@ class Meteosource:
         :param float: Longitude of the point
         :param str: Timezone for final output. Requests are always made in UTC!
         :param str: Units to use
+        :param str: Endpoint to use, can be overriden
         :return TimeMachine: TimeMachine object with the archive data
         """
         # Build the URL for the request
-        url = self._build_url(endpoints.TIME_MACHINE)
+        url = self._build_url(endpoint)
 
         # Update parameters with location selection, date will be added in loop
         pars = self._build_location_pars({'units': units}, place_id, lat, lon)
