@@ -10,12 +10,14 @@ PROBABILITY = {'precipitation', 'storm', 'freeze'}
 
 PRECIPITATION = {'total', 'type', 'convective', 'rainspot'}
 
-CURRENT = {'cloud_cover', 'dew_point', 'feels_like', 'humidity', 'icon',
-           'icon_num', 'irradiance', 'ozone', 'precipitation', 'pressure',
-           'summary', 'temperature', 'uv_index', 'visibility', 'wind',
-           'wind_chill'}
+CURRENT = {'cape', 'cloud_cover', 'dew_point', 'evaporation', 'feels_like',
+           'humidity', 'icon', 'icon_num', 'irradiance', 'lftx', 'ozone',
+           'precipitation', 'pressure', 'probability', 'snow_depth',
+           'soil_temperature', 'summary', 'sunshine_duration',
+           'surface_temperature', 'temperature', 'uv_index', 'visibility',
+           'wind', 'wind_chill'}
 
-PRECIPITATION_CURRENT = {'total', 'type'}
+PRECIPITATION_CURRENT = {'convective', 'rainspot', 'total', 'type'}
 
 HOURLY = {'date', 'weather', 'icon', 'summary', 'temperature', 'feels_like',
           'soil_temperature', 'wind_chill', 'dew_point', 'surface_temperature',

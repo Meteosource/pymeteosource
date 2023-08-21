@@ -12088,6 +12088,44 @@ SAMPLE_TIME_MACHINE = {
       "ozone": 284
     }
   ],
+    "daily":{
+      "temperature":15.5,
+      "temperature_min":10.0,
+      "temperature_max":18.25,
+      "feels_like":16.0,
+      "feels_like_min":9.75,
+      "feels_like_max":19.5,
+      "wind_chill":16.25,
+      "wind_chill_min":9.5,
+      "wind_chill_max":19.5,
+      "soil_temperature":14.25,
+      "soil_temperature_min":9.0,
+      "soil_temperature_max":17.0,
+      "dew_point":9.0,
+      "dew_point_min":7.75,
+      "dew_point_max":10.0,
+      "surface_temperature":17.5,
+      "surface_temperature_min":12.75,
+      "surface_temperature_max":20.25,
+      "wind":{
+         "speed":1.24,
+         "gusts":5.9,
+         "dir":"NNW",
+         "angle":334.0
+      },
+      "cloud_cover":{
+         "total":43.72,
+         "low":13.32,
+         "middle":27.62,
+         "high":18.14
+      },
+      "pressure":1006.49,
+      "precipitation":{
+         "total":0.0,
+         "type":"none"
+      },
+      "humidity":68.75
+   },
     "statistics":{
       "temperature":{
          "avg":13.0,
