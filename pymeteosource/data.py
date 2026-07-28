@@ -478,6 +478,58 @@ class Forecast:
         return getattr(self, attr)
 
 
+class Place:
+    """
+    Class that represents a single place from the places endpoints
+
+    Attributes
+    ----------
+    name : str
+        Name of the place
+    place_id : str
+        Identifier of the place, which can be used in the other requests
+    adm_area1 : str
+        Administrative area 1 the place belongs to
+    adm_area2 : str
+        Administrative area 2 the place belongs to
+    country : str
+        Country the place belongs to
+    lat : float
+        Latitude of the place
+    lon : float
+        Longitude of the place
+    timezone : str
+        Timezone str identifier in IANA (zoneinfo) notation
+    type : str
+        Type of the place (e.g. 'settlement')
+    """
+    def __init__(self, data):
+        lat, lon = data['lat'], data['lon']
+        # Parse the lat, lon string values to floats
+        self.lat = float(lat[:-1]) if lat[-1] == 'N' else -float(lat[:-1])
+        self.lon = float(lon[:-1]) if lon[-1] == 'E' else -float(lon[:-1])
+        self.name = data['name']
+        self.place_id = data['place_id']
+        self.adm_area1 = data['adm_area1']
+        self.adm_area2 = data['adm_area2']
+        self.country = data['country']
+        self.timezone = data['timezone']
+        self.type = data['type']
+
+    def __repr__(self):
+        """
+        Override __repr__ to have useful text when attempting to print
+        """
+        return '<Place {} ({}) lat: {}, lon: {}>'.format(
+            self.place_id, self.country, self.lat, self.lon)
+
+    def __getitem__(self, attr):
+        """
+        Override __getitem__ to allow variable access using [] operator
+        """
+        return getattr(self, attr)
+
+
 class TimeMachine:
     """
     Class that represents time machine archive data
