@@ -35,8 +35,10 @@ from .variables_list import (CURRENT, PRECIPITATION_CURRENT, WIND, MINUTELY,
 
 sys.path.insert(0, realpath(join(dirname(__file__), "..")))
 
-# Load API key from environment variable, the mocked tests do not need it
-API_KEY = os.environ.get('METEOSOURCE_API_KEY')
+# Load API key from environment variable, the mocked tests do not need it.
+# An empty value is treated as absent (e.g. an unset secret in CI expands
+# to an empty string).
+API_KEY = os.environ.get('METEOSOURCE_API_KEY') or None
 # Dummy API key used for the tests that mock the API responses
 DUMMY_API_KEY = 'dummy-api-key'
 
