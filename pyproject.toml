@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pymeteosource"
+version = "1.8.0"
+description = "Meteosource API wrapper library"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Meteosource", email = "support@meteosource.com"},
+]
+requires-python = ">=3.9"
+dependencies = [
+    "requests",
+    "pytz",
+]
+classifiers = [
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/Meteosource/pymeteosource"
+
+[project.optional-dependencies]
+pandas = ["pandas"]
+
+[tool.setuptools.packages.find]
+include = ["pymeteosource*"]
