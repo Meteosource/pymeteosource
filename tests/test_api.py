@@ -7,19 +7,26 @@ from unittest.mock import MagicMock
 from os.path import realpath, join, dirname
 import pytz
 import pytest
-import pandas
+
+# The pandas module is only needed for the to_pandas tests
+try:
+    import pandas
+except ImportError:
+    pandas = None
 
 from pymeteosource.api import Meteosource
 from pymeteosource.types import tiers, endpoints, units, sections
 from pymeteosource.types.time_formats import F1
 from pymeteosource.data import (Forecast, SingleTimeData, MultipleTimesData,
-                                AlertsData)
+                                AlertsData, AirQuality, Place)
 from pymeteosource.errors import (InvalidArgumentError, InvalidIndexTypeError,
                                   InvalidStrIndexError, EmptyInstanceError,
                                   InvalidDatetimeIndexError, InvalidDateFormat,
                                   InvalidDateSpecification, InvalidDateRange)
 
-from .sample_data import SAMPLE_POINT, SAMPLE_TIME_MACHINE
+from .sample_data import (SAMPLE_POINT, SAMPLE_TIME_MACHINE,
+                          SAMPLE_AIR_QUALITY, SAMPLE_NEAREST_PLACE,
+                          SAMPLE_FIND_PLACES, SAMPLE_FIND_PLACES_PREFIX)
 from .dst_changes_data import LONG_DAY
 from .variables_list import (CURRENT, PRECIPITATION_CURRENT, WIND, MINUTELY,
                              HOURLY, CLOUD, PRECIPITATION, PROBABILITY, DAILY,
@@ -28,15 +35,24 @@ from .variables_list import (CURRENT, PRECIPITATION_CURRENT, WIND, MINUTELY,
 
 sys.path.insert(0, realpath(join(dirname(__file__), "..")))
 
-# Load API key from environment variable
+# Load API key from environment variable, the mocked tests do not need it
 API_KEY = os.environ.get('METEOSOURCE_API_KEY')
-if API_KEY is None:
-    raise ValueError("You need to provide API key as environment variable.")
+# Dummy API key used for the tests that mock the API responses
+DUMMY_API_KEY = 'dummy-api-key'
+
+# Decorator that skips tests that make real requests when no API key is set
+live_api = pytest.mark.skipif(
+    API_KEY is None,
+    reason='METEOSOURCE_API_KEY environment variable is not set')
+
+# Decorator that skips tests that need the optional pandas package
+needs_pandas = pytest.mark.skipif(
+    pandas is None, reason='pandas is not installed')
 
 
 def test_to_dst_changes():
-    """Test exporting to pandas"""
-    m = Meteosource(API_KEY, tiers.FLEXI)
+    """Test datetime handling when DST changes"""
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=LONG_DAY)
     # Get the mocked forecast
@@ -62,14 +78,16 @@ def test_build_url():
     """Test URL building"""
     url = 'https://www.meteosource.com/api/v1/%s/%s'
     for tier in [tiers.FLEXI, tiers.STANDARD, tiers.STARTUP, tiers.FREE]:
-        for endpoint in [endpoints.POINT, endpoints.TIME_MACHINE]:
-            m = Meteosource(API_KEY, tier)
+        for endpoint in [endpoints.POINT, endpoints.TIME_MACHINE,
+                         endpoints.AIR_QUALITY, endpoints.NEAREST_PLACE,
+                         endpoints.FIND_PLACES, endpoints.FIND_PLACES_PREFIX]:
+            m = Meteosource(DUMMY_API_KEY, tier)
             assert m._build_url(endpoint) == url % (tier, endpoint)
 
 
 def test_get_point_forecast_exceptions():
     """Test detection of invalid point specification detection"""
-    m = Meteosource(API_KEY, tiers.FLEXI)
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
 
@@ -100,7 +118,7 @@ def test_get_point_forecast_exceptions():
 
 def test_get_time_machine_exceptions():
     """Test date specification for get_time_machine"""
-    m = Meteosource(API_KEY, tiers.FLEXI)
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_TIME_MACHINE)
 
@@ -157,7 +175,7 @@ def test_get_time_machine_exceptions():
 
 def test_forecast_indexing():
     """Test indexing MultipleTimesData with int, string and datetimes"""
-    m = Meteosource(API_KEY, tiers.FLEXI)
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
     # Get the mocked forecast
@@ -213,9 +231,10 @@ def test_forecast_indexing():
     assert f.hourly[0].date == dt
 
 
+@needs_pandas
 def test_to_pandas():
     """Test exporting to pandas"""
-    m = Meteosource(API_KEY, tiers.FLEXI)
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
     # Get the mocked forecast
@@ -241,8 +260,8 @@ def test_to_pandas():
 
 
 def test_to_dict():
-    """Test exporting to pandas"""
-    m = Meteosource(API_KEY, tiers.FLEXI)
+    """Test exporting to dict"""
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
     # Get the mocked forecast
@@ -252,6 +271,7 @@ def test_to_dict():
     assert 'afternoon_wind_angle' in f.daily[0].to_dict()
 
 
+@live_api
 def test_forecast_structure():
     """Test structure of the Forecast object on real data"""
     # Initialize the Meteosource object
@@ -328,8 +348,9 @@ def test_forecast_structure():
     assert str(e.value) == 'The instance does not contain any data!'
 
 
+@live_api
 def test_time_machine_structure():
-    """Test structure of the Forecast object on real data"""
+    """Test structure of the TimeMachine object on real data"""
     # Shortcut for UTC timezone object
     utc = pytz.timezone('UTC')
     # Shortcut for Kabul timezone object
@@ -355,7 +376,7 @@ def test_time_machine_structure():
 
 def test_alerts():
     """Test alerts"""
-    m = Meteosource(API_KEY, tiers.FLEXI)
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
     # We mock the API requests with sample data
     m.req_handler.execute_request = MagicMock(return_value=SAMPLE_POINT)
     # Get the mocked alerts data
@@ -371,3 +392,102 @@ def test_alerts():
 
     dt = pytz.timezone("Asia/Bangkok").localize(datetime(2022, 3, 8, 23, 0, 0))
     assert len(alerts.get_active_alerts(dt)) == 2
+
+
+def test_get_air_quality():
+    """Test the air_quality endpoint on mocked data"""
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
+    # We mock the API requests with sample data
+    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_AIR_QUALITY)
+    # Get the mocked air quality data
+    aq = m.get_air_quality(place_id='london', tz='Europe/London')
+
+    # Check if the header is correct
+    assert isinstance(aq, AirQuality)
+    assert aq.lat == 51.50853
+    assert aq.lon == -0.12574
+    assert aq.elevation == 25
+    assert aq.timezone == 'Europe/London'
+
+    # Check the hourly air quality data
+    assert isinstance(aq.data, MultipleTimesData)
+    assert len(aq.data) == 3
+    assert aq.data[0].air_quality == 2
+    assert aq.data[0].pm25 == 9.37
+    assert aq.data[-1].air_quality == 3
+
+    # The dates are converted from UTC to the requested timezone (BST here)
+    assert aq.data[0].date == pytz.utc.localize(datetime(2026, 7, 24, 8))
+    assert aq.data['2026-07-24T09:00:00'].pm10 == 11.78
+
+    # Test invalid place definitions
+    with pytest.raises(InvalidArgumentError) as e:
+        m.get_air_quality(place_id='london', lat=50, lon=14)
+    assert str(e.value) == 'Only place_id or lat+lon can be specified!'
+    with pytest.raises(InvalidArgumentError) as e:
+        m.get_air_quality(lat=50)
+    assert str(e.value) == 'Only place_id or lat+lon can be specified!'
+
+
+def test_get_nearest_place():
+    """Test the nearest_place endpoint on mocked data"""
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
+    # We mock the API requests with sample data
+    m.req_handler.execute_request = MagicMock(
+        return_value=SAMPLE_NEAREST_PLACE)
+    # Get the mocked nearest place
+    place = m.get_nearest_place(lat=51.5, lon=-0.13)
+
+    # Check the Place attributes
+    assert isinstance(place, Place)
+    assert place.name == 'London'
+    assert place.place_id == 'london'
+    assert place.adm_area1 == 'England'
+    assert place.adm_area2 == 'Greater London'
+    assert place.country == 'United Kingdom'
+    assert place.lat == 51.50853
+    assert place.lon == -0.12574
+    assert place.timezone == 'Europe/London'
+    assert place.type == 'settlement'
+
+    # Check the index operator access
+    assert place['place_id'] == 'london'
+
+
+def test_get_find_places():
+    """Test the find_places endpoint on mocked data"""
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
+    # We mock the API requests with sample data
+    m.req_handler.execute_request = MagicMock(return_value=SAMPLE_FIND_PLACES)
+    # Get the mocked places
+    places = m.get_find_places(text='london')
+
+    # Check the list of Place objects
+    assert isinstance(places, list)
+    assert len(places) == 3
+    assert all(isinstance(x, Place) for x in places)
+    assert places[0].place_id == 'london'
+    assert places[1].place_id == 'london-6058560'
+    assert places[1].adm_area2 is None
+    assert places[1].lon == -81.23304
+    assert places[2].name == 'City of London'
+
+
+def test_get_find_places_prefix():
+    """Test the find_places_prefix endpoint on mocked data"""
+    m = Meteosource(DUMMY_API_KEY, tiers.FLEXI)
+    # We mock the API requests with sample data
+    m.req_handler.execute_request = MagicMock(
+        return_value=SAMPLE_FIND_PLACES_PREFIX)
+    # Get the mocked places
+    places = m.get_find_places_prefix(text='lond')
+
+    # Check the list of Place objects
+    assert isinstance(places, list)
+    assert len(places) == 2
+    assert all(isinstance(x, Place) for x in places)
+    assert places[0].place_id == 'london'
+    assert places[1].place_id == 'londrina'
+    # The southern/western coordinates are parsed as negative floats
+    assert places[1].lat == -23.31028
+    assert places[1].lon == -51.16278
