@@ -478,6 +478,46 @@ class Forecast:
         return getattr(self, attr)
 
 
+class AirQuality:
+    """
+    Class that represents air quality data
+
+
+    Attributes
+    ----------
+    lat : float
+        Actual latitude of the point
+    lon : float
+        Actual longitude of the point
+    elevation : int
+        Elevation of the location
+    timezone : str
+        Timezone str identifier in IANA notation
+    data : MultipleTimesData
+        The actual hourly air quality data
+    """
+    def __init__(self, data, tz):
+        lat, lon = data['lat'], data['lon']
+        # Parse the lat, lon string values to floats
+        self.lat = float(lat[:-1]) if lat[-1] == 'N' else -float(lat[:-1])
+        self.lon = float(lon[:-1]) if lon[-1] == 'E' else -float(lon[:-1])
+        self.elevation = data['elevation']
+        self.timezone = tz
+        self.data = MultipleTimesData(data, 'air_quality', self.timezone)
+
+    def __repr__(self):
+        """
+        Override __repr__ to have useful text when attempting to print
+        """
+        return '<AirQuality for lat: {}, lon: {}>'.format(self.lat, self.lon)
+
+    def __getitem__(self, attr):
+        """
+        Override __getitem__ to allow variable access using [] operator
+        """
+        return getattr(self, attr)
+
+
 class Place:
     """
     Class that represents a single place from the places endpoints
@@ -499,7 +539,7 @@ class Place:
     lon : float
         Longitude of the place
     timezone : str
-        Timezone str identifier in IANA (zoneinfo) notation
+        Timezone str identifier in IANA notation
     type : str
         Type of the place (e.g. 'settlement')
     """

@@ -6,7 +6,7 @@ from .request_handler import RequestHandler
 from .types import langs, sections, units, endpoints, time_formats
 from .errors import (InvalidArgumentError, InvalidDateFormat, InvalidDateRange,
                      InvalidDateSpecification)
-from .data import Forecast, TimeMachine, Place
+from .data import Forecast, TimeMachine, AirQuality, Place
 
 
 class Meteosource:
@@ -30,6 +30,8 @@ class Meteosource:
         Get forecast data for given point
     get_time_machine
         Get archive data from time_machine endpoint
+    get_air_quality
+        Get air quality data for given point
     get_nearest_place
         Get the nearest named place for given point
     get_find_places
@@ -128,6 +130,33 @@ class Meteosource:
 
         # Load the result into Forecast object and return it
         return Forecast(data, tz)
+
+    def get_air_quality(self, place_id=None, lat=None, lon=None, tz='UTC',
+                        lang=langs.ENGLISH, endpoint=endpoints.AIR_QUALITY):
+        """
+        Get air quality data for given point
+
+        :param str: Identifier of the place (place_id)
+        :param float: Latitude of the point
+        :param float: Longitude of the point
+        :param str: Timezone for final output. Requests are always made in UTC!
+        :param str: Language
+        :param str: Endpoint to use, can be overriden
+        :return AirQuality: AirQuality object with the air quality data
+        """
+        # Build the URL for the request
+        url = self._build_url(endpoint)
+        # Parameters of the request, the requested tz is always UTC!
+        pars = {'language': lang, 'timezone': 'UTC'}
+
+        # Update parameters with location selection
+        pars = self._build_location_pars(pars, place_id, lat, lon)
+
+        # Execute the request with the built URL and parameters
+        data = self.req_handler.execute_request(url, **pars)
+
+        # Load the result into AirQuality object and return it
+        return AirQuality(data, tz)
 
     def get_nearest_place(self, lat, lon, lang=langs.ENGLISH,
                           endpoint=endpoints.NEAREST_PLACE):
