@@ -137,7 +137,7 @@ class BaseData:
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         c, members = self.__class__.__name__, self.get_members()
         date = getattr(self, 'date', getattr(self, 'day', 'current'))
@@ -220,7 +220,7 @@ class AlertsData(BaseData):
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         c = self.__class__.__name__
         return '<Instance of {} containing {} alerts>'.format(c, len(self.data))
@@ -362,7 +362,7 @@ class MultipleTimesData(BaseData):
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         # Shortcut for the class name
         c = self.__class__.__name__
@@ -387,7 +387,7 @@ class MultipleTimesData(BaseData):
         """
         Override __getitem__ to allow variable access using [] operator
 
-        We want to use the operator to acces wanted timestep. We support
+        We want to use the operator to access wanted timestep. We support
         integer (classic 0-based index), string (using YYYY-MM-DDTHH:MM:SS or
         YYYY-MM-DD format) or datetime (both localized or unlocalized).
         """
@@ -398,9 +398,9 @@ class MultipleTimesData(BaseData):
             return self.data[attr]
         """
         For string, we use 'dates_str' list and return the data with
-        'date'/'day' corresponding to first occurence in 'date_str'. On long
+        'date'/'day' corresponding to first occurrence in 'date_str'. On long
         day, there can be two timesteps with the same string representation of
-        the datetime, which is why the 'first occurence' is mentioned here.
+        the datetime, which is why the 'first occurrence' is mentioned here.
         """
         if isinstance(attr, str):
             if attr not in self.dates_str:
@@ -467,7 +467,7 @@ class Forecast:
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         return '<Forecast for lat: {}, lon: {}>'.format(self.lat, self.lon)
 
@@ -588,7 +588,7 @@ class TimeMachine:
     units : str
         Units set of the data
     data : MultipleTimesData
-        The acutal archive data
+        The actual archive data
     statistics : MultipleTimesData
         Long term normals (statistics)
 
@@ -615,7 +615,7 @@ class TimeMachine:
         daily['data'][0]['day'] = day
         self.daily = MultipleTimesData(daily, 'daily', 'UTC')
 
-        # Assing human-readable weather category from icon number
+        # Assign human-readable weather category from icon number
         for x in self.data.data:
             x.weather = ICONS.get(x.icon, 1)['weather']
             x.weather_id = ICONS.get(x.icon, 1)['weather_id']
@@ -633,7 +633,7 @@ class TimeMachine:
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         return '<TimeMachine for lat: {}, lon: {}>'.format(self.lat, self.lon)
 
@@ -653,7 +653,7 @@ class TimeMachine:
         feature, use 'pip install pymeteosource[pandas]' to install this
         package, or install pandas manually using 'pip install pandas'.
 
-        :param bool: If True, includes daily long term statistics epanded to hours
+        :param bool: If True, includes daily long term statistics expanded to hours
         :return pandas.DataFrame: The DataFrame with 'date' as index
         """
         from pandas.api.types import is_datetime64_any_dtype as is_datetime

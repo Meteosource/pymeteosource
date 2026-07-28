@@ -111,7 +111,7 @@ class Meteosource:
         :param str: Timezone for final output. Requests are always made in UTC!
         :param str: Language
         :param str: Units to use
-        :param str: Endpoint to use, can be overriden
+        :param str: Endpoint to use, can be overridden
         :return Forecast: Forecast object with the forecast data
         """
         # Build the URL for the request
@@ -141,7 +141,7 @@ class Meteosource:
         :param float: Longitude of the point
         :param str: Timezone for final output. Requests are always made in UTC!
         :param str: Language
-        :param str: Endpoint to use, can be overriden
+        :param str: Endpoint to use, can be overridden
         :return AirQuality: AirQuality object with the air quality data
         """
         # Build the URL for the request
@@ -169,7 +169,7 @@ class Meteosource:
         :param float: Latitude of the point
         :param float: Longitude of the point
         :param str: Language
-        :param str: Endpoint to use, can be overriden
+        :param str: Endpoint to use, can be overridden
         :return Place: Place object with the nearest place
         """
         # Build the URL for the request
@@ -193,7 +193,7 @@ class Meteosource:
 
         :param str: Place name or ZIP code to search for
         :param str: Language
-        :param str: Endpoint to use, can be overriden
+        :param str: Endpoint to use, can be overridden
         :return list: List of Place objects that match the search
         """
         # Build the URL for the request
@@ -217,7 +217,7 @@ class Meteosource:
 
         :param str: Place name or ZIP code prefix to search for
         :param str: Language
-        :param str: Endpoint to use, can be overriden
+        :param str: Endpoint to use, can be overridden
         :return list: List of Place objects that match the search
         """
         # Build the URL for the request
@@ -306,7 +306,7 @@ class Meteosource:
         :param float: Longitude of the point
         :param str: Timezone for final output. Requests are always made in UTC!
         :param str: Units to use
-        :param str: Endpoint to use, can be overriden
+        :param str: Endpoint to use, can be overridden
         :return TimeMachine: TimeMachine object with the archive data
         """
         # Build the URL for the request
