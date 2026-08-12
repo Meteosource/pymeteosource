@@ -132,7 +132,7 @@ class Meteosource:
         return Forecast(data, tz)
 
     def get_air_quality(self, place_id=None, lat=None, lon=None, tz='UTC',
-                        lang=langs.ENGLISH, endpoint=endpoints.AIR_QUALITY):
+                        endpoint=endpoints.AIR_QUALITY):
         """
         Get air quality data for given point
 
@@ -140,14 +140,15 @@ class Meteosource:
         :param float: Latitude of the point
         :param float: Longitude of the point
         :param str: Timezone for final output. Requests are always made in UTC!
-        :param str: Language
         :param str: Endpoint to use, can be overridden
         :return AirQuality: AirQuality object with the air quality data
         """
         # Build the URL for the request
         url = self._build_url(endpoint)
         # Parameters of the request, the requested tz is always UTC!
-        pars = {'language': lang, 'timezone': 'UTC'}
+        # Note: the air_quality endpoint does not accept a language
+        # parameter (its data is numeric only), unlike the other endpoints.
+        pars = {'timezone': 'UTC'}
 
         # Update parameters with location selection
         pars = self._build_location_pars(pars, place_id, lat, lon)
