@@ -6,7 +6,7 @@ from .request_handler import RequestHandler
 from .types import langs, sections, units, endpoints, time_formats
 from .errors import (InvalidArgumentError, InvalidDateFormat, InvalidDateRange,
                      InvalidDateSpecification)
-from .data import Forecast, TimeMachine
+from .data import Forecast, TimeMachine, AirQuality, Place
 
 
 class Meteosource:
@@ -28,6 +28,16 @@ class Meteosource:
         Build URL for the request
     get_point_forecast
         Get forecast data for given point
+    get_time_machine
+        Get archive data from time_machine endpoint
+    get_air_quality
+        Get air quality data for given point
+    get_nearest_place
+        Get the nearest named place for given point
+    get_find_places
+        Search for places by place name or ZIP code
+    get_find_places_prefix
+        Search for places by the beginning of the place name or ZIP code
     """
     def __init__(self, api_key, tier, host='https://www.meteosource.com/api',
                  use_gzip=True):
@@ -101,7 +111,7 @@ class Meteosource:
         :param str: Timezone for final output. Requests are always made in UTC!
         :param str: Language
         :param str: Units to use
-        :param str: Endpoint to use, can be overriden
+        :param str: Endpoint to use, can be overridden
         :return Forecast: Forecast object with the forecast data
         """
         # Build the URL for the request
@@ -120,6 +130,107 @@ class Meteosource:
 
         # Load the result into Forecast object and return it
         return Forecast(data, tz)
+
+    def get_air_quality(self, place_id=None, lat=None, lon=None, tz='UTC',
+                        endpoint=endpoints.AIR_QUALITY):
+        """
+        Get air quality data for given point
+
+        :param str: Identifier of the place (place_id)
+        :param float: Latitude of the point
+        :param float: Longitude of the point
+        :param str: Timezone for final output. Requests are always made in UTC!
+        :param str: Endpoint to use, can be overridden
+        :return AirQuality: AirQuality object with the air quality data
+        """
+        # Build the URL for the request
+        url = self._build_url(endpoint)
+        # Parameters of the request, the requested tz is always UTC!
+        # Note: the air_quality endpoint does not accept a language
+        # parameter (its data is numeric only), unlike the other endpoints.
+        pars = {'timezone': 'UTC'}
+
+        # Update parameters with location selection
+        pars = self._build_location_pars(pars, place_id, lat, lon)
+
+        # Execute the request with the built URL and parameters
+        data = self.req_handler.execute_request(url, **pars)
+
+        # Load the result into AirQuality object and return it
+        return AirQuality(data, tz)
+
+    def get_nearest_place(self, lat, lon, lang=langs.ENGLISH,
+                          endpoint=endpoints.NEAREST_PLACE):
+        """
+        Get the nearest named place for given point
+
+        This is useful to get a place_id (and other information) for
+        given lat+lon, which can then be used in the other requests.
+
+        :param float: Latitude of the point
+        :param float: Longitude of the point
+        :param str: Language
+        :param str: Endpoint to use, can be overridden
+        :return Place: Place object with the nearest place
+        """
+        # Build the URL for the request
+        url = self._build_url(endpoint)
+        # Parameters of the request
+        pars = {'lat': lat, 'lon': lon, 'language': lang}
+
+        # Execute the request with the built URL and parameters
+        data = self.req_handler.execute_request(url, **pars)
+
+        # Load the result into Place object and return it
+        return Place(data)
+
+    def get_find_places(self, text, lang=langs.ENGLISH,
+                        endpoint=endpoints.FIND_PLACES):
+        """
+        Search for places by place name or ZIP code
+
+        Complete words are required, use get_find_places_prefix if you
+        need prefix search (e.g. for autocomplete forms).
+
+        :param str: Place name or ZIP code to search for
+        :param str: Language
+        :param str: Endpoint to use, can be overridden
+        :return list: List of Place objects that match the search
+        """
+        # Build the URL for the request
+        url = self._build_url(endpoint)
+        # Parameters of the request
+        pars = {'text': text, 'language': lang}
+
+        # Execute the request with the built URL and parameters
+        data = self.req_handler.execute_request(url, **pars)
+
+        # Load the result into list of Place objects and return it
+        return [Place(place) for place in data]
+
+    def get_find_places_prefix(self, text, lang=langs.ENGLISH,
+                               endpoint=endpoints.FIND_PLACES_PREFIX):
+        """
+        Search for places by the beginning of the place name or ZIP code
+
+        As opposed to get_find_places, the last word of the query can be
+        incomplete, which is useful e.g. for autocomplete forms.
+
+        :param str: Place name or ZIP code prefix to search for
+        :param str: Language
+        :param str: Endpoint to use, can be overridden
+        :return list: List of Place objects that match the search
+        """
+        # Build the URL for the request
+        url = self._build_url(endpoint)
+        # Parameters of the request
+        pars = {'text': text, 'language': lang}
+
+        # Execute the request with the built URL and parameters
+        data = self.req_handler.execute_request(url, **pars)
+
+        # Load the result into list of Place objects and return it
+        return [Place(place) for place in data]
 
     def _str_to_date(self, date):
         """
@@ -196,7 +307,7 @@ class Meteosource:
         :param float: Longitude of the point
         :param str: Timezone for final output. Requests are always made in UTC!
         :param str: Units to use
-        :param str: Endpoint to use, can be overriden
+        :param str: Endpoint to use, can be overridden
         :return TimeMachine: TimeMachine object with the archive data
         """
         # Build the URL for the request

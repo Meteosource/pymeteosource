@@ -137,7 +137,7 @@ class BaseData:
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         c, members = self.__class__.__name__, self.get_members()
         date = getattr(self, 'date', getattr(self, 'day', 'current'))
@@ -220,7 +220,7 @@ class AlertsData(BaseData):
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         c = self.__class__.__name__
         return '<Instance of {} containing {} alerts>'.format(c, len(self.data))
@@ -362,7 +362,7 @@ class MultipleTimesData(BaseData):
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         # Shortcut for the class name
         c = self.__class__.__name__
@@ -387,7 +387,7 @@ class MultipleTimesData(BaseData):
         """
         Override __getitem__ to allow variable access using [] operator
 
-        We want to use the operator to acces wanted timestep. We support
+        We want to use the operator to access wanted timestep. We support
         integer (classic 0-based index), string (using YYYY-MM-DDTHH:MM:SS or
         YYYY-MM-DD format) or datetime (both localized or unlocalized).
         """
@@ -398,9 +398,9 @@ class MultipleTimesData(BaseData):
             return self.data[attr]
         """
         For string, we use 'dates_str' list and return the data with
-        'date'/'day' corresponding to first occurence in 'date_str'. On long
+        'date'/'day' corresponding to first occurrence in 'date_str'. On long
         day, there can be two timesteps with the same string representation of
-        the datetime, which is why the 'first occurence' is mentioned here.
+        the datetime, which is why the 'first occurrence' is mentioned here.
         """
         if isinstance(attr, str):
             if attr not in self.dates_str:
@@ -467,9 +467,101 @@ class Forecast:
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         return '<Forecast for lat: {}, lon: {}>'.format(self.lat, self.lon)
+
+    def __getitem__(self, attr):
+        """
+        Override __getitem__ to allow variable access using [] operator
+        """
+        return getattr(self, attr)
+
+
+class AirQuality:
+    """
+    Class that represents air quality data
+
+
+    Attributes
+    ----------
+    lat : float
+        Actual latitude of the point
+    lon : float
+        Actual longitude of the point
+    elevation : int
+        Elevation of the location
+    timezone : str
+        Timezone str identifier in IANA notation
+    data : MultipleTimesData
+        The actual hourly air quality data
+    """
+    def __init__(self, data, tz):
+        lat, lon = data['lat'], data['lon']
+        # Parse the lat, lon string values to floats
+        self.lat = float(lat[:-1]) if lat[-1] == 'N' else -float(lat[:-1])
+        self.lon = float(lon[:-1]) if lon[-1] == 'E' else -float(lon[:-1])
+        self.elevation = data['elevation']
+        self.timezone = tz
+        self.data = MultipleTimesData(data, 'air_quality', self.timezone)
+
+    def __repr__(self):
+        """
+        Override __repr__ to have useful text when attempting to print
+        """
+        return '<AirQuality for lat: {}, lon: {}>'.format(self.lat, self.lon)
+
+    def __getitem__(self, attr):
+        """
+        Override __getitem__ to allow variable access using [] operator
+        """
+        return getattr(self, attr)
+
+
+class Place:
+    """
+    Class that represents a single place from the places endpoints
+
+    Attributes
+    ----------
+    name : str
+        Name of the place
+    place_id : str
+        Identifier of the place, which can be used in the other requests
+    adm_area1 : str
+        Administrative area 1 the place belongs to
+    adm_area2 : str
+        Administrative area 2 the place belongs to
+    country : str
+        Country the place belongs to
+    lat : float
+        Latitude of the place
+    lon : float
+        Longitude of the place
+    timezone : str
+        Timezone str identifier in IANA notation
+    type : str
+        Type of the place (e.g. 'settlement')
+    """
+    def __init__(self, data):
+        lat, lon = data['lat'], data['lon']
+        # Parse the lat, lon string values to floats
+        self.lat = float(lat[:-1]) if lat[-1] == 'N' else -float(lat[:-1])
+        self.lon = float(lon[:-1]) if lon[-1] == 'E' else -float(lon[:-1])
+        self.name = data['name']
+        self.place_id = data['place_id']
+        self.adm_area1 = data['adm_area1']
+        self.adm_area2 = data['adm_area2']
+        self.country = data['country']
+        self.timezone = data['timezone']
+        self.type = data['type']
+
+    def __repr__(self):
+        """
+        Override __repr__ to have useful text when attempting to print
+        """
+        return '<Place {} ({}) lat: {}, lon: {}>'.format(
+            self.place_id, self.country, self.lat, self.lon)
 
     def __getitem__(self, attr):
         """
@@ -496,7 +588,7 @@ class TimeMachine:
     units : str
         Units set of the data
     data : MultipleTimesData
-        The acutal archive data
+        The actual archive data
     statistics : MultipleTimesData
         Long term normals (statistics)
 
@@ -523,7 +615,7 @@ class TimeMachine:
         daily['data'][0]['day'] = day
         self.daily = MultipleTimesData(daily, 'daily', 'UTC')
 
-        # Assing human-readable weather category from icon number
+        # Assign human-readable weather category from icon number
         for x in self.data.data:
             x.weather = ICONS.get(x.icon, 1)['weather']
             x.weather_id = ICONS.get(x.icon, 1)['weather_id']
@@ -541,7 +633,7 @@ class TimeMachine:
 
     def __repr__(self):
         """
-        Override __repr__ to have usefull text when attepting to print
+        Override __repr__ to have useful text when attempting to print
         """
         return '<TimeMachine for lat: {}, lon: {}>'.format(self.lat, self.lon)
 
@@ -561,7 +653,7 @@ class TimeMachine:
         feature, use 'pip install pymeteosource[pandas]' to install this
         package, or install pandas manually using 'pip install pandas'.
 
-        :param bool: If True, includes daily long term statistics epanded to hours
+        :param bool: If True, includes daily long term statistics expanded to hours
         :return pandas.DataFrame: The DataFrame with 'date' as index
         """
         from pandas.api.types import is_datetime64_any_dtype as is_datetime

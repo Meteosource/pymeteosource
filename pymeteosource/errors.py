@@ -164,7 +164,7 @@ class InvalidClassType(ValueError):
 
 class InvalidDateSpecification(ValueError):
     """
-    Exception that is raised date(s) for time_machien not specified correctly
+    Exception that is raised date(s) for time_machine not specified correctly
 
     Attributes
     ----------
@@ -184,7 +184,7 @@ class InvalidDateSpecification(ValueError):
 
 class InvalidDateRange(ValueError):
     """
-    Exception that is raised date(s) for time_machien not specified correctly
+    Exception that is raised date(s) for time_machine not specified correctly
 
     Attributes
     ----------

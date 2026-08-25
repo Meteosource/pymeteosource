@@ -9,7 +9,7 @@ Using this python wrapper library, you can easily implement Meteosource JSON dat
 
 
 ### Installation
-The basic functionality of this library only needs `requests` and `pytz` modules. To install it with the minimal requirements, use:
+The library requires Python 3.9 or newer. The basic functionality of this library only needs `requests` and `pytz` modules. To install it with the minimal requirements, use:
 
 ```bash
 pip3 install pymeteosource
@@ -33,9 +33,12 @@ pip3 install pytest
 pip3 install pandas
 ```
 
-The tests only make 2 actual requests to live API, most of the tests use mocked API response. You need to provide your actual API key using environment variable. To run the tests, use:
+Most of the tests use mocked API responses and run without an API key. The 2 tests that make actual requests to the live API are skipped unless you provide your API key using environment variable:
 ```bash
-# Change this to your actual API key
+# Run the offline tests only (no API key needed)
+pytest tests
+
+# Change this to your actual API key to also run the live-API tests
 export METEOSOURCE_API_KEY='abcdefghijklmnopqrstuvwxyz0123456789ABCD'
 pytest tests
 ```
@@ -106,6 +109,43 @@ time_machine = meteosource.get_time_machine(
 Note, that the historical weather data and long-term statistics are always retrieved for full UTC days. If you specify a different timezone, the datetimes get converted, but they will cover the full UTC, not the local day. If you specify a `datetime` to any of the date parameters, the hours, minutes, seconds and microseconds get ignored. So if you request `date='2021-12-25T23:59:59'`, you get data for full UTC day `2021-12-25`.
 
 If you pass `list`/`tuple`/`set` of dates to `date` parameter, they days will be inserted into the inner structures in the order they are being iterated over. This affects time indexing by integer (see below). An API request is made for each day, even when you specify a date range.
+
+### Air quality
+To get hourly air quality data (air quality index, particulate matter, ozone, ...) for given place, use `get_air_quality()` method. Just like for the forecast, you have to specify either `lat` + `lon` or the `place_id`:
+
+```python
+# Get the air quality data for given point
+air_quality = meteosource.get_air_quality(
+    place_id='london',  # ID of the place you want the air quality for
+    lat=None,  # You can specify lat instead of place_id
+    lon=None,  # You can specify lon instead of place_id
+    tz='UTC'  # Defaults to 'UTC', regardless of the point location
+)
+
+print(air_quality)  # <AirQuality for lat: 51.50853, lon: -0.12574>
+# The hourly data support the same time indexing as the forecast sections
+air_quality.data[0].air_quality  # 2
+air_quality.data[0].pm25  # 9.37
+```
+
+### Places
+To find places by name (or ZIP code), use `get_find_places()` (complete words required) or `get_find_places_prefix()` (the last word can be incomplete, which is useful e.g. for autocomplete forms). Both methods return a `list` of `Place` objects:
+
+```python
+places = meteosource.get_find_places(text='london')
+places_prefix = meteosource.get_find_places_prefix(text='lond')
+
+print(places[0])  # <Place london (United Kingdom) lat: 51.50853, lon: -0.12574>
+places[0].place_id  # 'london'
+places[0].timezone  # 'Europe/London'
+```
+
+To get the nearest named place for given GPS coordinates, use `get_nearest_place()`. This is useful e.g. to get a `place_id` for given `lat` + `lon`:
+
+```python
+place = meteosource.get_nearest_place(lat=51.51, lon=-0.13)
+place.place_id  # 'london'
+```
 
 ## Working with the weather data
 All of the pymeteosource's data objects have overloaded `__repr__()` methods, so you can `print` the objects them to get useful information about them:

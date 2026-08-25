@@ -12147,3 +12147,130 @@ SAMPLE_TIME_MACHINE = {
       }
    }
 }
+
+SAMPLE_AIR_QUALITY = {
+    "lat":"51.50853N",
+    "lon":"0.12574W",
+    "elevation":25,
+    "timezone":"UTC",
+    "data":[
+        {
+            "date":"2026-07-24T08:00:00",
+            "aerosol_550":0.26,
+            "air_quality":2,
+            "co_surface":125.65,
+            "dust_550nm":0.007,
+            "dust_mixing_ratio_05":3.562e-10,
+            "no2_surface":19.14,
+            "no_surface":2.96,
+            "ozone_surface":63.44,
+            "ozone_total":312.82,
+            "pm10":11.78,
+            "pm25":9.37,
+            "so2_surface":4.57
+        },
+        {
+            "date":"2026-07-24T09:00:00",
+            "aerosol_550":0.27,
+            "air_quality":2,
+            "co_surface":127.31,
+            "dust_550nm":0.008,
+            "dust_mixing_ratio_05":3.601e-10,
+            "no2_surface":20.02,
+            "no_surface":3.11,
+            "ozone_surface":65.12,
+            "ozone_total":313.15,
+            "pm10":12.04,
+            "pm25":9.61,
+            "so2_surface":4.72
+        },
+        {
+            "date":"2026-07-24T10:00:00",
+            "aerosol_550":0.28,
+            "air_quality":3,
+            "co_surface":129.87,
+            "dust_550nm":0.009,
+            "dust_mixing_ratio_05":3.655e-10,
+            "no2_surface":21.35,
+            "no_surface":3.29,
+            "ozone_surface":67.03,
+            "ozone_total":313.87,
+            "pm10":12.53,
+            "pm25":9.98,
+            "so2_surface":4.86
+        }
+    ]
+}
+
+SAMPLE_NEAREST_PLACE = {
+    "name":"London",
+    "place_id":"london",
+    "adm_area1":"England",
+    "adm_area2":"Greater London",
+    "country":"United Kingdom",
+    "lat":"51.50853N",
+    "lon":"0.12574W",
+    "timezone":"Europe/London",
+    "type":"settlement"
+}
+
+SAMPLE_FIND_PLACES = [
+    {
+        "name":"London",
+        "place_id":"london",
+        "adm_area1":"England",
+        "adm_area2":"Greater London",
+        "country":"United Kingdom",
+        "lat":"51.50853N",
+        "lon":"0.12574W",
+        "timezone":"Europe/London",
+        "type":"settlement"
+    },
+    {
+        "name":"London",
+        "place_id":"london-6058560",
+        "adm_area1":"Ontario",
+        "adm_area2":None,
+        "country":"Canada",
+        "lat":"42.98339N",
+        "lon":"81.23304W",
+        "timezone":"America/Toronto",
+        "type":"settlement"
+    },
+    {
+        "name":"City of London",
+        "place_id":"city-of-london",
+        "adm_area1":"England",
+        "adm_area2":"Greater London",
+        "country":"United Kingdom",
+        "lat":"51.51279N",
+        "lon":"0.09184W",
+        "timezone":"Europe/London",
+        "type":"settlement"
+    }
+]
+
+SAMPLE_FIND_PLACES_PREFIX = [
+    {
+        "name":"London",
+        "place_id":"london",
+        "adm_area1":"England",
+        "adm_area2":"Greater London",
+        "country":"United Kingdom",
+        "lat":"51.50853N",
+        "lon":"0.12574W",
+        "timezone":"Europe/London",
+        "type":"settlement"
+    },
+    {
+        "name":"Londrina",
+        "place_id":"londrina",
+        "adm_area1":"Paraná",
+        "adm_area2":"Londrina",
+        "country":"Brazil",
+        "lat":"23.31028S",
+        "lon":"51.16278W",
+        "timezone":"America/Sao_Paulo",
+        "type":"settlement"
+    }
+]
